@@ -1,0 +1,23 @@
+apply from: "config/common.build.gradle"
+
+
+gradle.taskGraph.whenReady {taskGraph ->
+    if (taskGraph.hasTask(release)) {
+        version = '0.9'
+    } else {
+        version = '0.9-SNAPSHOT'
+    }
+}
+
+dependencies {
+    // compile dependencies
+    compile 'com.strandls.alchemy:alchemy-inject:0.9'
+    compile 'com.aerospike:aerospike-client:3.+'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
+    compile 'commons-configuration:commons-configuration:1.10'
+    compile 'de.ruedigermoeller:fst:2.29'
+    
+
+    // test dependencies
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}

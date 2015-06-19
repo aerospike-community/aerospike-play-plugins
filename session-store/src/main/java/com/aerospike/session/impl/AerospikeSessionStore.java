@@ -34,9 +34,11 @@ import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Operation;
 import com.aerospike.client.Record;
+import com.aerospike.client.policy.GenerationPolicy;
 import com.aerospike.client.policy.Policy;
 import com.aerospike.client.policy.RecordExistsAction;
 import com.aerospike.client.policy.WritePolicy;
+import com.aerospike.session.CheckAndSetOperation;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStore;
 import com.aerospike.session.SessionStoreException;
@@ -74,7 +76,7 @@ public class AerospikeSessionStore implements SessionStore {
     /**
      * The method to check whether the value is an instance of primitive
      * datatype. If not, we use transcoder to handle pojos.
-     * 
+     *
      * @param value
      * @return
      */
@@ -112,7 +114,7 @@ public class AerospikeSessionStore implements SessionStore {
      * The method to identify whether the retrieved object has a primitive
      * datatype. For handling pojos we use Transcoder to get back original
      * object
-     * 
+     *
      * @param newValue
      * @return
      */
@@ -133,6 +135,7 @@ public class AerospikeSessionStore implements SessionStore {
             }
 
         } else {
+            log.error("Unknown type {}", newValue);
             throw new RuntimeException();
         }
     }
@@ -150,11 +153,11 @@ public class AerospikeSessionStore implements SessionStore {
         log.debug("Adding new record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
                 sessionId);
-        Bin bin1 = new Bin(key, newValue);
         WritePolicy writePolicy = new WritePolicy();
         writePolicy.expiration = config.getSessionMaxAge();
-        client.put(writePolicy, sessionID, bin1);
 
+        Bin bin1 = new Bin(key, newValue);
+        client.put(writePolicy, sessionID, bin1);
     }
 
     /*
@@ -228,21 +231,28 @@ public class AerospikeSessionStore implements SessionStore {
             writePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
             Key sessionID = new Key(config.getNamespace(), config.getSet(),
                     sessionId);
-            // Record record = client.get(null, sessionID);
             Record record = client.operate(writePolicy, sessionID,
                     Operation.touch(), Operation.get());
             if (record == null) {
                 throw new SessionNotFound("Session not Found!");
             }
-            Map<String, Object> map = record.bins;
-            Map<String, Object> fetchedmap = new HashMap<String, Object>();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                fetchedmap.put(entry.getKey(), fetch(entry.getValue()));
-            }
-            return fetchedmap;
+            return recordToMap(record);
         } catch (AerospikeException e) {
             throw new SessionNotFound("Sessionstore Exception");
         }
+    }
+
+    /**
+     * @param record
+     * @return
+     */
+    private Map<String, Object> recordToMap(Record record) {
+        Map<String, Object> map = record.bins;
+        Map<String, Object> fetchedmap = new HashMap<String, Object>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            fetchedmap.put(entry.getKey(), fetch(entry.getValue()));
+        }
+        return fetchedmap;
     }
 
     /*
@@ -297,6 +307,45 @@ public class AerospikeSessionStore implements SessionStore {
         boolean itsHere = client.exists(new Policy(), sessionID);
         return itsHere;
 
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.aerospike.session.SessionStore#checkAndSet(java.lang.String,
+     * com.aerospike.session.SessionOperation)
+     */
+    @Override
+    public void checkAndSet(String sessionId, CheckAndSetOperation sesOp)
+            throws SessionStoreException, SessionNotFound {
+
+        log.debug("Reading the contents of the record");
+        Key sessionID = new Key(config.getNamespace(), config.getSet(),
+                sessionId);
+        for (int i = 0; i < config.getCheckAndSetMaxTries(); i++) {
+            Record record = client.get(null, sessionID);
+            Map<String, Object> curBins = recordToMap(record);
+            Map<String, Object> newBins = sesOp.execute(curBins);
+            WritePolicy writepolicy = new WritePolicy();
+            writepolicy.expiration = config.getSessionMaxAge();
+            writepolicy.recordExistsAction = RecordExistsAction.UPDATE;
+            writepolicy.generationPolicy = GenerationPolicy.EXPECT_GEN_EQUAL;
+            writepolicy.generation = record != null ? record.generation : 0;
+            log.debug("{} {}", record, writepolicy.generation);
+            ArrayList<Bin> binList = new ArrayList<Bin>();
+            for (Entry<String, Object> entry : newBins.entrySet()) {
+                Bin bin = new Bin(entry.getKey(), reformat(entry.getValue()));
+                binList.add(bin);
+            }
+            Bin[] bins = binList.toArray(new Bin[binList.size()]);
+            try {
+                client.put(writepolicy, sessionID, bins);
+                break;
+            } catch (AerospikeException e) {
+
+            }
+
+        }
     }
 
 }

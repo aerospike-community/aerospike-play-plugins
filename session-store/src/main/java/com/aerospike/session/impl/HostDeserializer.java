@@ -27,16 +27,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 
 /**
+ * Deserializer for parsing list of Host objects
+ * 
  * @author akshay
  *
  */
 public class HostDeserializer extends JsonDeserializer<Host> {
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.fasterxml.jackson.databind.JsonDeserializer#deserialize
-     * (com.fasterxml.jackson.core.JsonParser,
-     * com.fasterxml.jackson.databind.DeserializationContext)
+     *      (com.fasterxml.jackson.core.JsonParser,
+     *      com.fasterxml.jackson.databind.DeserializationContext)
      */
     @Override
     public Host deserialize(JsonParser jp, DeserializationContext ctxt)

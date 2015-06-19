@@ -27,10 +27,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JacksonTranscoderTest {
 
-    /*
-     * Test method for {@link
-     * com.aerospike.transcoder.jackson.JacksonTranscoder#encode()} and {@link
-     * com.aerospike.transcoder.jackson.JacksonTranscoder#decode()}
+    /**
+     * Test method for
+     * {@link com.aerospike.transcoder.jackson.JacksonTranscoder#encode()} and
+     * {@link com.aerospike.transcoder.jackson.JacksonTranscoder#decode()}
      */
     @Test
     public void test() {

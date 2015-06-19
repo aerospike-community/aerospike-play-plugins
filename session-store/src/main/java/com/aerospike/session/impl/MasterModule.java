@@ -17,17 +17,20 @@
 package com.aerospike.session.impl;
 
 import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
 
 /**
+ * MasterModule installs all the dependent modules
+ *
  * @author akshay
  *
  */
 public class MasterModule extends AbstractModule {
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
@@ -36,6 +39,7 @@ public class MasterModule extends AbstractModule {
         install(new AerospikeClientModule());
         install(new StoreConfigmodule());
         install(new TranscoderModule());
+        install(new FstconfigModule());
     }
 
 }

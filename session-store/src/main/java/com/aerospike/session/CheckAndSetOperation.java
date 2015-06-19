@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package com.aerospike.session.impl;
+package com.aerospike.session;
 
-import com.aerospike.session.SessionStore;
-import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
+import java.util.Map;
 
 /**
- * The module for binding SessionStore interface to AerospikeSessionStore
+ * An operation interface for providing Read and Write operations. whose
+ * implementaion must be provided by users
  * 
  * @author akshay
  *
  */
-public class SessionStoreModule extends AbstractModule {
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.google.inject.AbstractModule#configure()
-     */
-    @Override
-    protected void configure() {
-        bind(SessionStore.class).to(AerospikeSessionStore.class).in(
-                Singleton.class);
-
-    }
+public interface CheckAndSetOperation {
+    Map<String, Object> execute(Map<String, Object> curValues);
 }

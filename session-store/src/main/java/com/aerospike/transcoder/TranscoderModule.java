@@ -19,13 +19,15 @@ package com.aerospike.transcoder;
 import com.google.inject.AbstractModule;
 
 /**
+ * TranscoderModule for binding Transcoder interface
+ * 
  * @author akshay
  *
  */
 public class TranscoderModule extends AbstractModule {
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override

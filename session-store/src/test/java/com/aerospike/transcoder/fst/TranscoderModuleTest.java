@@ -35,7 +35,7 @@ import com.google.inject.Injector;
  */
 public class TranscoderModuleTest {
 
-    /*
+    /**
      * Test method for {@link com.aerospike.transcoder.TranscoderProvider#get()}
      */
     @Test
@@ -49,7 +49,7 @@ public class TranscoderModuleTest {
         Assert.assertTrue(transcoderProvider.get() instanceof FstTranscoder);
     }
 
-    /*
+    /**
      * Test method for {@link com.aerospike.transcoder.TranscoderProvider#get()}
      */
     @Test

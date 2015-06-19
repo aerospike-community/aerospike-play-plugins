@@ -36,7 +36,7 @@ import com.aerospike.session.SessionStoreException;
  *
  */
 public class AerospikeSessiontimeoutTest {
-    /*
+    /**
      * Test method for defaultTTL. The expiration value will be read from
      * Aerospike.conf
      */
@@ -56,7 +56,8 @@ public class AerospikeSessiontimeoutTest {
         Assert.assertEquals("John Doe", store.get("default_session", "name"));
     }
 
-    /*
+    /**
+     *
      * Test method for smallTTL when we read before the session expires
      */
     @Test
@@ -75,7 +76,7 @@ public class AerospikeSessiontimeoutTest {
         Assert.assertEquals("Jane Doe", store.get("small_session", "name"));
     }
 
-    /*
+    /**
      * Test method for smallTTL when we read after the session expires
      */
     @Test
@@ -99,7 +100,7 @@ public class AerospikeSessiontimeoutTest {
         }
     }
 
-    /*
+    /**
      * Test method for smallTTL. If Get() method is called, the TTL of the
      * record will be updated.
      */
@@ -126,7 +127,7 @@ public class AerospikeSessiontimeoutTest {
         Assert.assertTrue(newExp - oldExp >= 5);
     }
 
-    /*
+    /**
      * Test method for smallTTL: If GetAll() method is called to retrieve the
      * record, the TTL of the record will be updated
      */
@@ -157,7 +158,7 @@ public class AerospikeSessiontimeoutTest {
         Assert.assertTrue(newExp - oldExp >= 5);
     }
 
-    /*
+    /**
      * Test method for the case when the TTL never expires
      */
     @Test

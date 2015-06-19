@@ -30,14 +30,14 @@ import com.google.inject.Singleton;
 /**
  * ConfigReader by default reads configuration supplied by the user
  * configuration file.
- * 
+ *
  * @author akshay
  *
  */
 @Slf4j
 @Singleton
 public class ConfigReader {
-    /*
+    /**
      * Read configuration from the filename provided by the user.
      */
     public AerospikeSessionStoreConfig getConfiguration(
@@ -47,15 +47,16 @@ public class ConfigReader {
         log.debug("Reading store config from {}.", configresourcename);
         @Cleanup
         final InputStream stream = getClass().getClassLoader()
-                .getResourceAsStream(configresourcename);
+        .getResourceAsStream(configresourcename);
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Host.class, new HostDeserializer());
         mapper.registerModule(module);
+        System.out.println("\n\n" + mapper);
         return mapper.readValue(stream, AerospikeSessionStoreConfig.class);
 
     }
 
-    /*
+    /**
      * If filename is not supplied, read configuration from default file
      * 'aerospike-session-store.cfg'
      */

@@ -134,4 +134,17 @@ public interface SessionStore {
      *             if session storage failed to read.
      */
     boolean exists(final String sessionId) throws SessionStoreException;
+
+    /**
+     * Read all key value pairs associated with a session identified by
+     * sessionId, and invoke checkAndSet operation atomically
+     *
+     * @param sessionId
+     *            the session ID
+     *
+     * @param operation
+     *            check and set operation
+     */
+    void checkAndSet(final String sessionId, CheckAndSetOperation operation)
+            throws SessionStoreException, SessionNotFound;
 }

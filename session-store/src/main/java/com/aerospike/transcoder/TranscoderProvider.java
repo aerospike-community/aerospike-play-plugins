@@ -26,6 +26,8 @@ import com.aerospike.session.impl.AerospikeSessionStoreConfig;
 import com.google.inject.Injector;
 
 /**
+ * Provider for Transcoder interface
+ * 
  * @author akshay
  *
  */
@@ -36,9 +38,9 @@ public class TranscoderProvider implements Provider<Transcoder> {
     private final Injector injector;
 
     @SuppressWarnings("unchecked")
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see javax.inject.Provider#get()
      */
     @Override

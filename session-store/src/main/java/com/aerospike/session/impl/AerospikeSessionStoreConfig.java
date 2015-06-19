@@ -89,10 +89,13 @@ public class AerospikeSessionStoreConfig {
      * Private constructor required by a lot of serializers. e.g. Jackson,
      * Hibernate, etc.
      */
+
+    private final int checkAndSetMaxTries;
+
     @SuppressWarnings("unused")
     private AerospikeSessionStoreConfig() {
         this(null, null, null, null, null, 0, FstTranscoder.class
-                .getCanonicalName());
+                .getCanonicalName(), 4);
     }
 
 }

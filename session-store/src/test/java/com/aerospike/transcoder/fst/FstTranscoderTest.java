@@ -23,6 +23,8 @@ import org.junit.Test;
 
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.jackson.Student;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * @author akshay
@@ -30,22 +32,25 @@ import com.aerospike.transcoder.jackson.Student;
  */
 public class FstTranscoderTest {
 
-    /*
-     * Test method for {@link
-     * com.aerospike.transcoder.fst.FstTranscoder#encode()} and {@link
-     * com.aerospike.transcoder.fst.FstTranscoder#decode()}
+    /**
+     * Test method for
+     * {@link com.aerospike.transcoder.fst.FstTranscoder#encode()} and
+     * {@link com.aerospike.transcoder.fst.FstTranscoder#decode()}
      */
     @Test
     public void test() throws TranscodeException, IOException {
         Student student = new Student();
         student.setName("Akshay");
         student.setRollno("cs12b1005");
-        student.setSubject("asadsfa");
-        FstTranscoder fst = new FstTranscoder();
+        student.setSubject("Computer SCience");
+        // FstTranscoder fst = new FstTranscoder();
+        Injector injector = Guice.createInjector(new FstconfigModule());
+        FstTranscoder fst = injector.getInstance(FstTranscoder.class);
         byte[] barray;
 
         barray = fst.encode(student);
         fst.decode(barray);
+        System.out.println(fst.decode(barray));
         Assert.assertEquals(student, fst.decode(barray));
 
     }

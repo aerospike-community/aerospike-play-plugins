@@ -3,12 +3,22 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: "jacoco"
 
+
 // set the group
-group = "com.aerospike." + project.name.split("-")[0]
+group = "com.aerospike"
+version = '0.9-SNAPSHOT'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 // Sonar project can be applied only once in a multiproject build.
 // A hack to ensure it is applied only once

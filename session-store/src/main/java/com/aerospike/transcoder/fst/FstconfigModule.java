@@ -14,34 +14,23 @@
  * limitations under the License.
  */
 
-package com.aerospike.session.impl;
+package com.aerospike.transcoder.fst;
 
-import java.io.IOException;
+import org.nustaq.serialization.FSTConfiguration;
 
-import com.google.inject.Provider;
+import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 /**
- * Provider for AerospikeSessionStoreConfig
- * 
+ * The module for binding FSTConfiguration
+ *
  * @author akshay
  *
  */
-@Singleton
-public class StoreConfigProvider implements
-        Provider<AerospikeSessionStoreConfig> {
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.inject.Provider#get()
-     */
+public class FstconfigModule extends AbstractModule {
     @Override
-    public AerospikeSessionStoreConfig get() {
-        ConfigReader configreader = new ConfigReader();
-        try {
-            return configreader.getConfiguration();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected void configure() {
+        bind(FSTConfiguration.class).toProvider(FSTconfigProvider.class).in(
+                Singleton.class);
     }
 }

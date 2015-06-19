@@ -16,32 +16,24 @@
 
 package com.aerospike.session.impl;
 
-import java.io.IOException;
+import java.util.Map;
 
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
+import com.aerospike.session.CheckAndSetOperation;
 
 /**
- * Provider for AerospikeSessionStoreConfig
- * 
  * @author akshay
  *
  */
-@Singleton
-public class StoreConfigProvider implements
-        Provider<AerospikeSessionStoreConfig> {
-    /*
+public class SessionOperatorTest implements CheckAndSetOperation {
+
+    /**
      * (non-Javadoc)
-     * 
-     * @see com.google.inject.Provider#get()
+     *
+     * @see com.aerospike.session.impl.SessionOperation#execute(java.util.Map)
      */
     @Override
-    public AerospikeSessionStoreConfig get() {
-        ConfigReader configreader = new ConfigReader();
-        try {
-            return configreader.getConfiguration();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Map<String, Object> execute(Map<String, Object> curBin) {
+        return null;
     }
+
 }

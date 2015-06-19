@@ -27,6 +27,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
+ * Provider for AerospikeClient
+ * 
  * @author akshay
  *
  */
@@ -40,7 +42,7 @@ public class AerospikeClientProvider implements Provider<AerospikeClient> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.Provider#get()
      */
     @Override

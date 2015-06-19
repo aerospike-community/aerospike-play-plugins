@@ -1,24 +1,5 @@
 apply from: "config/common.build.gradle"
-apply plugin: 'maven-publish'
 
-gradle.taskGraph.whenReady {taskGraph ->
-    if (taskGraph.hasTask(release)) {
-        version = '0.9'
-    } else {
-        version = '0.9-SNAPSHOT'
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId 'com.aerospike.session'
-            artifactId 'sessionstore'
-            version '1.1'
-			from components.java
-        }
-    }
-}
 
 dependencies {
     // compile dependencies

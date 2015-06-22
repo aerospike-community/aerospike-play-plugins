@@ -22,12 +22,12 @@ import com.google.inject.Singleton;
 
 /**
  * The module for binding SessionStore interface to AerospikeSessionStore
- * 
+ *
  * @author akshay
  *
  */
 public class SessionStoreModule extends AbstractModule {
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.google.inject.AbstractModule#configure()

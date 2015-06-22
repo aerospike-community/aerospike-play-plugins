@@ -16,7 +16,9 @@
 
 package com.aerospike.session.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.Cleanup;
@@ -66,6 +68,12 @@ public class AerospikeSessionStoreTest {
         Assert.assertEquals("bangalore", store.get("aero", "location"));
     }
 
+    /**
+     * Test method for writing POJOS
+     *
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
     @Test
     public void testPutObject() throws SessionStoreException, SessionNotFound {
 
@@ -78,6 +86,26 @@ public class AerospikeSessionStoreTest {
         store.put("RR", "student", student);
 
         Assert.assertEquals(student, store.get("RR", "student"));
+    }
+
+    /**
+     * Test method for reading POJOS
+     *
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
+    @Test
+    public void testPutList() throws SessionStoreException, SessionNotFound {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        List<Student> studentlist = new ArrayList<Student>();
+        studentlist.add(new Student("John doe", "QWERTY101", "TOC"));
+        studentlist.add(new Student("Jane doe", "ALPHA101", "DSA"));
+        List<String> stringlist = new ArrayList<String>();
+        stringlist.add("alphabets");
+        stringlist.add("numericals");
+        store.put("alphalist", "studentlist", stringlist);
+        store.put("betalist", "studentlist", studentlist);
     }
 
     /**
@@ -160,10 +188,12 @@ public class AerospikeSessionStoreTest {
         Key key = new Key("test", "users", "defsession");
         Record record1 = client.get(null, key);
         int oldExp = record1.expiration;
+        System.out.println("old expiry:" + oldExp);
         Thread.sleep(5000);
         store.get("defsession", "name");
         Record record2 = client.get(null, key);
         int newExp = record2.expiration;
+        System.out.println("new expiry:" + newExp);
         Assert.assertTrue(newExp - oldExp >= 5);
 
     }
@@ -207,4 +237,93 @@ public class AerospikeSessionStoreTest {
         Assert.assertTrue("The record exists", response);
     }
 
+    /**
+     * Test method for List of POJO
+     *
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
+    @Test
+    public void testGetList() throws SessionStoreException, SessionNotFound {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        List<Student> studentlist = new ArrayList<Student>();
+        studentlist.add(new Student("John doe", "QWERTY101", "TOC"));
+        studentlist.add(new Student("Jane doe", "ALPHA101", "DSA"));
+        store.put("alphalist", "studentlist", studentlist);
+
+        System.out.println(store.get("alphalist", "studentlist"));
+        Assert.assertEquals(store.get("alphalist", "studentlist"), studentlist);
+    }
+
+    /**
+     * Test method for Map consisting of POJO as Key/Value
+     *
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
+    @Test
+    public void testGetMap() throws SessionStoreException, SessionNotFound {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        Map<GateKey, String> map = new HashMap<GateKey, String>();
+        map.put(new GateKey(true, true), "TRUE");
+        map.put(new GateKey(true, false), "FALSE");
+        map.put(new GateKey(false, true), "FALSE");
+        map.put(new GateKey(false, false), "FALSE");
+        store.put("AndGatelogic", "AND gate", map);
+        System.out.println(store.get("AndGatelogic", "AND gate"));
+        Assert.assertEquals(store.get("AndGatelogic", "AND gate"), map);
+    }
+
+    /**
+     * Test method for List of Maps containing POJOS
+     *
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
+    @Test
+    public void testGetListofMap() throws SessionStoreException,
+    SessionNotFound {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        List<Map<GateKey, String>> boolist = new ArrayList<Map<GateKey, String>>();
+        Map<GateKey, String> ANDgate = new HashMap<GateKey, String>();
+        ANDgate.put(new GateKey(true, true), "TRUE");
+        ANDgate.put(new GateKey(true, false), "FALSE");
+        ANDgate.put(new GateKey(false, true), "FALSE");
+        ANDgate.put(new GateKey(false, false), "FALSE");
+        boolist.add(ANDgate);
+        Map<GateKey, String> ORgate = new HashMap<GateKey, String>();
+        ORgate.put(new GateKey(true, true), "TRUE");
+        ORgate.put(new GateKey(true, false), "FALSE");
+        ORgate.put(new GateKey(false, true), "FALSE");
+        ORgate.put(new GateKey(false, false), "FALSE");
+        boolist.add(ORgate);
+        store.put("Gatelogic", "allgates", boolist);
+        Assert.assertEquals(store.get("Gatelogic", "allgates"), boolist);
+    }
+
+    /**
+     * Testing for Map containing List of POJOS
+     * 
+     * @throws SessionStoreException
+     * @throws SessionNotFound
+     */
+    @Test
+    public void testGetMapofList() throws SessionStoreException,
+    SessionNotFound {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        List<Student> class1 = new ArrayList<Student>();
+        class1.add(new Student("Akki", "10", "DM"));
+        class1.add(new Student("Sid", "18", "LO"));
+        List<Student> class2 = new ArrayList<Student>();
+        class2.add(new Student("Aki", "1", "TOC"));
+        Map<Course, List<Student>> school = new HashMap<Course, List<Student>>();
+        school.put(new Course(3, "John Doe"), class1);
+        school.put(new Course(1, "Jane Doe"), class2);
+        store.put("school", "classroom", school);
+        Assert.assertEquals(store.get("school", "classroom"), school);
+    }
 }

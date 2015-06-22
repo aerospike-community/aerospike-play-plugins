@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder.fst;
+package com.aerospike.session.impl;
 
-import javax.inject.Provider;
-import javax.inject.Singleton;
+import java.io.Serializable;
 
-import org.nustaq.serialization.FSTConfiguration;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Provider for FSTConfiguration
- *
+ * Test class Course
+ * 
  * @author akshay
  *
  */
-@Singleton
-public class FSTconfigProvider implements Provider<FSTConfiguration> {
-    /**
-     * (non-Javadoc)
-     *
-     * @see javax.inject.Provider#get()
-     */
-    @Override
-    public FSTConfiguration get() {
-        FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
-        conf.setClassLoader(getClass().getClassLoader());
-        return conf;
+@ToString
+@EqualsAndHashCode
+public class Course implements Serializable {
+    private static final long serialVersionUID = 4L;
+    public int credits;
+    public String Instructor;
+
+    public Course(int credits, String Instructor) {
+        this.credits = credits;
+        this.Instructor = Instructor;
     }
 }

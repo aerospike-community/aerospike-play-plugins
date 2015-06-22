@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Test class.
+ * Test class Student
  *
  * @author akshay
  *
@@ -40,5 +40,16 @@ public class Student implements Serializable {
         this.name = null;
         this.rollno = null;
         this.subject = null;
+    }
+
+    /**
+     * @param string
+     * @param string2
+     * @param string3
+     */
+    public Student(String name, String rollno, String subject) {
+        this.name = name;
+        this.rollno = rollno;
+        this.subject = subject;
     }
 }

@@ -22,12 +22,12 @@ import com.google.inject.Singleton;
 
 /**
  * This module binds AerospikeClient to Provider
- * 
+ *
  * @author akshay
  *
  */
 public class AerospikeClientModule extends AbstractModule {
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.google.inject.AbstractModule#configure()
@@ -35,6 +35,6 @@ public class AerospikeClientModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(AerospikeClient.class).toProvider(AerospikeClientProvider.class)
-        .in(Singleton.class);
+                .in(Singleton.class);
     }
 }

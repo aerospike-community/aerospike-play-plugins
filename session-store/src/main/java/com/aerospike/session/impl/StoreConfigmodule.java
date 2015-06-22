@@ -21,12 +21,12 @@ import com.google.inject.Singleton;
 
 /**
  * The module for binding AerospikeSessionStoreConfig to Provider
- * 
+ *
  * @author akshay
  *
  */
 public class StoreConfigmodule extends AbstractModule {
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.google.inject.AbstractModule#configure()

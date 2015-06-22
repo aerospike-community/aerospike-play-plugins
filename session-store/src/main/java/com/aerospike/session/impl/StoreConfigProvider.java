@@ -23,16 +23,16 @@ import com.google.inject.Singleton;
 
 /**
  * Provider for AerospikeSessionStoreConfig
- * 
+ *
  * @author akshay
  *
  */
 @Singleton
 public class StoreConfigProvider implements
-        Provider<AerospikeSessionStoreConfig> {
-    /*
+Provider<AerospikeSessionStoreConfig> {
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.Provider#get()
      */
     @Override

@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.nustaq.serialization.FSTConfiguration;
 import org.nustaq.serialization.FSTObjectInput;
@@ -40,22 +41,14 @@ import com.aerospike.transcoder.Transcoder;
  * @author ashish
  *
  */
-
+@Slf4j
 @Singleton
 @RequiredArgsConstructor(onConstructor = @_(@Inject))
 public class FstTranscoder implements Transcoder {
 
     private final Provider<FSTConfiguration> confProvider;
 
-    /*
-     * @Inject public FstTranscoder() { conf =
-     * FSTConfiguration.createDefaultConfiguration();
-     * System.out.println("\n\n\n\n\n\nSome line to print" +
-     * getClass().getClassLoader() + "\n\n\n\n\n\n");
-     * conf.setClassLoader(getClass().getClassLoader()); }
-     */
-
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.aerospike.transcoder.Transcoder#encode(java.lang.Object)
@@ -63,6 +56,7 @@ public class FstTranscoder implements Transcoder {
     @Override
     public byte[] encode(final Object value) throws TranscodeException,
     IOException {
+        log.debug("FSTtranscoder called");
         @Cleanup
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -72,7 +66,7 @@ public class FstTranscoder implements Transcoder {
         return out.toByteArray();
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.aerospike.transcoder.Transcoder#decode(byte[])

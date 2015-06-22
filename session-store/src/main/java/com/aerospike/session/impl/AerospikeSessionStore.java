@@ -78,17 +78,41 @@ public class AerospikeSessionStore implements SessionStore {
      * datatype. If not, we use transcoder to handle pojos.
      *
      * @param value
+     * @param depth
      * @return
      */
-    public Object reformat(Object value) {
+    @SuppressWarnings("unchecked")
+    public Object reformat(Object value, int depth) {
+        log.debug("Transcoder depth" + depth);
         try {
             if (value instanceof String || value instanceof Number
-                    || value instanceof List || value instanceof Map) {
+                    || value instanceof Boolean) {
                 return value;
+            } else if (depth == 0 && value instanceof List<?>) {
+                List<Object> newList = new ArrayList<Object>();
+                for (Object obj : (List<?>) value) {
+                    System.out.println("\nAdding new list item");
+                    newList.add(reformat(obj, depth + 1));
+                    System.out.println("\n" + newList);
+
+                }
+                return newList;
+            } else if (depth == 0 && value instanceof Map) {
+                Map<Object, Object> newMap = new HashMap<Object, Object>();
+                for (Entry<Object, Object> entry : ((Map<Object, Object>) value)
+                        .entrySet()) {
+                    Object newKey = reformat(entry.getKey(), depth + 1);
+                    Object newVal = reformat(entry.getValue(), depth + 1);
+                    newMap.put(newKey, newVal);
+                }
+                return newMap;
             } else if (value instanceof byte[]) {
-                // Following convention: If the value given by the user is
-                // bytearray
-                // we just prepend '0'
+
+                /**
+                 *
+                 * Using the convention: If the value given by the user is
+                 * bytearray we just prepend '0'
+                 */
                 byte[] newValue = new byte[1 + ((byte[]) value).length];
                 newValue[0] = 0;
                 System.arraycopy(value, 0, newValue, 1, newValue.length - 1);
@@ -112,16 +136,40 @@ public class AerospikeSessionStore implements SessionStore {
 
     /**
      * The method to identify whether the retrieved object has a primitive
-     * datatype. For handling pojos we use Transcoder to get back original
-     * object
+     * datatype. Else we use Transcoder to get back encode/decode objects
+     *
      *
      * @param newValue
      * @return
      */
+    @SuppressWarnings("unchecked")
     public Object fetch(Object newValue) {
-        if (newValue instanceof String || newValue instanceof Number
-                || newValue instanceof List || newValue instanceof Map) {
+        if (newValue == null) {
+            return null;
+        } else if (newValue instanceof String) {
             return newValue;
+        } else if (newValue instanceof Number) {
+            return newValue;
+        } else if (newValue instanceof Boolean) {
+            return newValue;
+        } else if (newValue instanceof List<?>) {
+            List<Object> newList = new ArrayList<Object>();
+            for (Object obj : (List<?>) newValue) {
+                System.out.println("\nFetching new list item");
+                newList.add(fetch(obj));
+
+            }
+            return newList;
+
+        } else if (newValue instanceof Map) {
+            Map<Object, Object> newMap = new HashMap<Object, Object>();
+            for (Entry<Object, Object> entry : ((Map<Object, Object>) newValue)
+                    .entrySet()) {
+                Object newKey = fetch(entry.getKey());
+                Object newVal = fetch(entry.getValue());
+                newMap.put(newKey, newVal);
+            }
+            return newMap;
         } else if (newValue instanceof byte[]) {
             byte enValue = ((byte[]) newValue)[0];
             if (enValue == 0) {
@@ -140,16 +188,16 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.session.SessionStore#put(java.lang.String,
-     * java.lang.String, java.lang.Object)
+     *      java.lang.String, java.lang.Object)
      */
     @Override
     public void put(final String sessionId, final String key, final Object value)
             throws SessionStoreException {
-        Object newValue = reformat(value);
+        Object newValue = reformat(value, 0);
         log.debug("Adding new record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
                 sessionId);
@@ -160,12 +208,11 @@ public class AerospikeSessionStore implements SessionStore {
         client.put(writePolicy, sessionID, bin1);
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
-     * @see
-     * com.aerospike.aeroshift.session.SessionStore#putAll(java.lang.String,
-     * java.util.Map)
+     *
+     * @see com.aerospike.aeroshift.session.SessionStore#putAll(java.lang.String,
+     *      java.util.Map)
      */
     @Override
     public void putAll(final String sessionId, final Map<String, Object> map)
@@ -176,7 +223,7 @@ public class AerospikeSessionStore implements SessionStore {
                 sessionId);
         ArrayList<Bin> binList = new ArrayList<Bin>();
         for (Entry<String, Object> entry : map.entrySet()) {
-            Bin bin = new Bin(entry.getKey(), reformat(entry.getValue()));
+            Bin bin = new Bin(entry.getKey(), reformat(entry.getValue(), 0));
             binList.add(bin);
         }
         Bin[] bins = binList.toArray(new Bin[binList.size()]);
@@ -186,11 +233,11 @@ public class AerospikeSessionStore implements SessionStore {
 
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.aeroshift.session.SessionStore#get(java.lang.String,
-     * java.lang.String)
+     *      java.lang.String)
      */
     @Override
     public Object get(final String sessionId, final String key)
@@ -215,11 +262,10 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
-     * @see
-     * com.aerospike.aeroshift.session.SessionStore#getAll(java.lang.String)
+     *
+     * @see com.aerospike.aeroshift.session.SessionStore#getAll(java.lang.String)
      */
     @Override
     public Map<String, Object> getAll(final String sessionId)
@@ -243,7 +289,10 @@ public class AerospikeSessionStore implements SessionStore {
     }
 
     /**
+     * Fetches records and returns Map of key value entries
+     *
      * @param record
+     *
      * @return
      */
     private Map<String, Object> recordToMap(Record record) {
@@ -255,9 +304,9 @@ public class AerospikeSessionStore implements SessionStore {
         return fetchedmap;
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.aeroshift.session.SessionStore#touch(java.lang.String)
      */
     @Override
@@ -279,11 +328,10 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
-     * @see
-     * com.aerospike.aeroshift.session.SessionStore#destroy(java.lang.String)
+     *
+     * @see com.aerospike.aeroshift.session.SessionStore#destroy(java.lang.String)
      */
     @Override
     public void destroy(final String sessionId) throws SessionStoreException {
@@ -293,11 +341,10 @@ public class AerospikeSessionStore implements SessionStore {
         client.delete(null, sessionID);
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
-     * @see
-     * com.aerospike.aeroshift.session.SessionStore#exists(java.lang.String)
+     *
+     * @see com.aerospike.aeroshift.session.SessionStore#exists(java.lang.String)
      */
     @Override
     public boolean exists(final String sessionId) throws SessionStoreException {
@@ -309,11 +356,11 @@ public class AerospikeSessionStore implements SessionStore {
 
     }
 
-    /*
+    /**
      * (non-Javadoc)
      *
      * @see com.aerospike.session.SessionStore#checkAndSet(java.lang.String,
-     * com.aerospike.session.SessionOperation)
+     *      com.aerospike.session.SessionOperation)
      */
     @Override
     public void checkAndSet(String sessionId, CheckAndSetOperation sesOp)
@@ -334,7 +381,7 @@ public class AerospikeSessionStore implements SessionStore {
             log.debug("{} {}", record, writepolicy.generation);
             ArrayList<Bin> binList = new ArrayList<Bin>();
             for (Entry<String, Object> entry : newBins.entrySet()) {
-                Bin bin = new Bin(entry.getKey(), reformat(entry.getValue()));
+                Bin bin = new Bin(entry.getKey(), reformat(entry.getValue(), 0));
                 binList.add(bin);
             }
             Bin[] bins = binList.toArray(new Bin[binList.size()]);

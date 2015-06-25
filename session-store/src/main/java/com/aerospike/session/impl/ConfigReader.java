@@ -51,7 +51,6 @@ public class ConfigReader {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Host.class, new HostDeserializer());
         mapper.registerModule(module);
-        System.out.println("\n\n" + mapper);
         return mapper.readValue(stream, AerospikeSessionStoreConfig.class);
 
     }

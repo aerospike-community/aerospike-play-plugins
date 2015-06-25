@@ -55,8 +55,8 @@ public class FstTranscoder implements Transcoder {
      */
     @Override
     public byte[] encode(final Object value) throws TranscodeException,
-    IOException {
-        log.debug("FSTtranscoder called");
+            IOException {
+        log.debug("FSTtranscoder called on {}", value);
         @Cleanup
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 

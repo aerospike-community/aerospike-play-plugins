@@ -91,9 +91,7 @@ public class AerospikeSessionStore implements SessionStore {
             } else if (depth == 0 && value instanceof List<?>) {
                 List<Object> newList = new ArrayList<Object>();
                 for (Object obj : (List<?>) value) {
-                    System.out.println("\nAdding new list item");
                     newList.add(reformat(obj, depth + 1));
-                    System.out.println("\n" + newList);
 
                 }
                 return newList;
@@ -155,7 +153,6 @@ public class AerospikeSessionStore implements SessionStore {
         } else if (newValue instanceof List<?>) {
             List<Object> newList = new ArrayList<Object>();
             for (Object obj : (List<?>) newValue) {
-                System.out.println("\nFetching new list item");
                 newList.add(fetch(obj));
 
             }

@@ -1,0 +1,11 @@
+@(carts:List[ShoppingItem])
+<ul>
+ 
+@for(cart <- carts) {
+  <li>@cart</li>
+} 
+
+</ul>
+<p class="buttons">
+		<a href="@routes.Application.index">add Item</a>
+	</p>

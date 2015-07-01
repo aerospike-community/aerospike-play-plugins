@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Aeroshift Authors
+ * Copyright 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.google.inject.AbstractModule;
 
 /**
  * TranscoderModule for binding Transcoder interface
- * 
+ *
  * @author akshay
  *
  */
@@ -32,6 +32,7 @@ public class TranscoderModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        bind(Transcoder.class).toProvider(TranscoderProvider.class);
+        bind(Transcoder.class).annotatedWith(SessionStoreTranscoder.class)
+                .toProvider(TranscoderProvider.class);
     }
 }

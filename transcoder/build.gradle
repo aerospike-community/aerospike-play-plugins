@@ -1,0 +1,13 @@
+apply from: "config/common.build.gradle"
+
+
+dependencies {
+    // compile dependencies
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
+    compile 'commons-configuration:commons-configuration:1.10'
+    compile 'de.ruedigermoeller:fst:2.29'
+    
+
+    // test dependencies
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}

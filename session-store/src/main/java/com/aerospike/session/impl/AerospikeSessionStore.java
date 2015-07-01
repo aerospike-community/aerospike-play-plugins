@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Aeroshift Authors
+ * Copyright 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aerospike.client.AerospikeClient;
@@ -42,6 +41,7 @@ import com.aerospike.session.CheckAndSetOperation;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStore;
 import com.aerospike.session.SessionStoreException;
+import com.aerospike.transcoder.SessionStoreTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
 
@@ -56,7 +56,6 @@ import com.aerospike.transcoder.Transcoder;
  *
  */
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @_(@Inject))
 public class AerospikeSessionStore implements SessionStore {
     /**
      * The session store configuration.
@@ -72,6 +71,21 @@ public class AerospikeSessionStore implements SessionStore {
      * Transcoder for pojos.
      */
     private final Transcoder transcoder;
+
+    /**
+     * @param config
+     * @param client
+     * @param transcoder
+     */
+    @Inject
+    public AerospikeSessionStore(AerospikeSessionStoreConfig config,
+            @SessionStoreAerospikeClient AerospikeClient client,
+            @SessionStoreTranscoder Transcoder transcoder) {
+        super();
+        this.config = config;
+        this.client = client;
+        this.transcoder = transcoder;
+    }
 
     /**
      * The method to check whether the value is an instance of primitive

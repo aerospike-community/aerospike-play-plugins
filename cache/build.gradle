@@ -1,0 +1,13 @@
+apply from: "config/common.build.gradle"
+
+
+dependencies {
+    // compile dependencies
+    compile project(':aerospike-transcoder')
+    compile 'com.aerospike:aerospike-client:3.+'
+    compile 'commons-configuration:commons-configuration:1.10'
+    
+
+    // test dependencies
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}

@@ -1,0 +1,13 @@
+bin/
+target/
+.classpath
+.project
+logs/
+repository/
+dist/
+*.lock
+.history
+RUNNING_PID
+activator*
+build/
+.gradle/

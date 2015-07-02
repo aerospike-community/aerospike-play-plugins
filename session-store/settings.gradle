@@ -1,6 +1,0 @@
-
-rootProject.name = 'aerospike-session-store'
-
-// append aeroshift to each root project name to each child
-rootProject.children.each { it.name = rootProject.name + "-" + it.name }
-

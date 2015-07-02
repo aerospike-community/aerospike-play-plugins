@@ -11,9 +11,6 @@ RUNNING_PID
 activator*
 build/
 .gradle
-.settings
-config
-gradle
 .cache-main
 .externalToolBuilders
 *~

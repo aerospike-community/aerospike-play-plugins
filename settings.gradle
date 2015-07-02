@@ -1,0 +1,7 @@
+include 'transcoder' , 'session-store', 'cache'
+
+rootProject.name = 'aerospike-java-plugins'
+
+// append aeroshift to each root project name to each child
+rootProject.children.each { it.name = "aerospike" + "-" + it.name }
+

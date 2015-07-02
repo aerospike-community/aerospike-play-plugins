@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
+import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,12 +35,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author ashish
  *
  */
-@RequiredArgsConstructor(onConstructor = @_(@Inject))
 public class JacksonTranscoder implements Transcoder {
     /**
      * The object mapper.
      */
     private final ObjectMapper mapper;
+
+    /**
+     * Classloader for getting hold of classes.
+     */
+    private final ClassLoader classLoader;
+
+    /**
+     * Create the transcoder.
+     *
+     * @param mapper
+     * @param classLoader
+     */
+    @Inject
+    public JacksonTranscoder(ObjectMapper mapper,
+            @TranscoderClassLoader ClassLoader classLoader) {
+        super();
+        this.mapper = mapper;
+        this.classLoader = classLoader;
+    }
 
     /**
      * The classname.
@@ -98,7 +117,7 @@ public class JacksonTranscoder implements Transcoder {
             byte[] valueBytes = wrapped.value;
             Class<?> classType = null;
 
-            classType = Class.forName(className);
+            classType = classLoader.loadClass(className);
             return mapper.readValue(valueBytes, classType);
         } catch (ClassNotFoundException | IOException e) {
             throw new TranscodeException("IOException", e);

@@ -16,10 +16,14 @@
 package com.aerospike.play.sessionstore;
 
 import java.util.Random;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang.StringUtils;
+
 import play.mvc.Http;
-import play.mvc.Http.RequestHeader;
+
+import com.aerospike.session.SessionIDProvider;
 
 /**
  * Default Provider for SessionID
@@ -28,36 +32,31 @@ import play.mvc.Http.RequestHeader;
  *
  */
 @Slf4j
-public class DefaultSessionIDProvider implements SessionID{
+public class DefaultSessionIDProvider implements SessionIDProvider {
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.inject.Provider#get()
+     */
+    @Override
+    public String get() {
+        play.mvc.Http.Context ctx = Http.Context.current();
+        String sessionid = ctx.session().get("sessionid");
+        if (StringUtils.isBlank(sessionid)) {
+            String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            int string_length = 10;
+            StringBuffer random_str = new StringBuffer();
+            for (int i = 0; i < string_length; i++) {
+                int randomInt = 0;
+                Random randomGenerator = new Random();
+                randomInt = randomGenerator.nextInt(CHAR_LIST.length());
+                random_str.append(CHAR_LIST.charAt(randomInt));
+            }
+            sessionid = random_str.toString();
+            ctx.session().put("sessionid", sessionid);
+            log.debug("Setting up cookie");
+        }
+        return sessionid;
+    }
 
-	@SuppressWarnings("unused")
-	private RequestHeader requestheader;
-	
-	/**
-	 * (non-Javadoc)
-	 * @see com.aerospike.play.sessionstore.SessionID#getSessionId()
-	 */
-	public String getSessionId() {
-		play.mvc.Http.Context ctx = Http.Context.current();
-		String sessionid = ctx.session().get("sessionid");
-		if (StringUtils.isBlank(sessionid)){
-			String CHAR_LIST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; 
-			int string_length= 10; 
-			StringBuffer random_str = new StringBuffer(); 
-			for(int i=0; i<string_length; i++)
-			{ 
-				int randomInt = 0;
-				Random randomGenerator = new Random();
-				randomInt = randomGenerator.nextInt(CHAR_LIST.length());
-				random_str.append(CHAR_LIST.charAt(randomInt));
-			}
-					  
-			ctx.session().put("sessionid", random_str.toString());
-			log.debug("Setting up coookie");
-		}
-		return sessionid;
-	}
-
-	
-	
 }

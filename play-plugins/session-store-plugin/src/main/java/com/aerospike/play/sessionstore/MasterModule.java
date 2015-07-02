@@ -17,15 +17,15 @@
 package com.aerospike.play.sessionstore;
 
 import lombok.RequiredArgsConstructor;
-
-import org.nustaq.serialization.FSTConfiguration;
-
 import play.Configuration;
 import play.Environment;
 
 import com.aerospike.session.impl.AerospikeClientModule;
+import com.aerospike.session.impl.AerospikeSessionStoreConfig;
 import com.aerospike.session.impl.SessionStoreModule;
 import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.transcoder.classloader.TranscoderClassLoader;
+import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -45,10 +45,9 @@ public class MasterModule extends AbstractModule {
 
     @Singleton
     @Provides
-    FSTConfiguration getConfiguration() {
-        FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
-        conf.setClassLoader(environment.classLoader());
-        return conf;
+    @TranscoderClassLoader
+    ClassLoader getClassLoader() {
+        return environment.classLoader();
     }
 
     /**
@@ -60,11 +59,10 @@ public class MasterModule extends AbstractModule {
     protected void configure() {
         install(new SessionStoreModule());
         install(new AerospikeClientModule());
-        install(new APSessionStoreConfigModule());
         install(new TranscoderModule());
-        install(new APSessionStoreModule());
-        install(new SessionIDModule());
-
+        install(new FstconfigModule());
+        bind(AerospikeSessionStoreConfig.class).toProvider(
+                AerospikePlayConfigReader.class).in(Singleton.class);
     }
 
 }

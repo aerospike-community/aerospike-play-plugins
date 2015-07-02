@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,32 @@
  * limitations under the License.
  */
 
-package com.aerospike.session.impl;
+package com.aerospike.transcoder.classloader;
 
-import com.aerospike.transcoder.TranscoderModule;
-import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
-import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 /**
- * MasterModule installs all the dependent modules
+ * Binding module for classloader used in transcoder.
  *
  * @author akshay
  *
  */
-public class MasterModule extends AbstractModule {
+public class TranscoderSystemClassLoaderModule extends AbstractModule {
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
-        install(new SessionStoreModule());
-        install(new AerospikeClientModule());
-        install(new StoreConfigmodule());
-        install(new TranscoderModule());
-        install(new TranscoderSystemClassLoaderModule());
-        install(new FstconfigModule());
+    }
+
+    @TranscoderClassLoader
+    @Provides
+    ClassLoader getClassLoader() {
+        return getClass().getClassLoader();
     }
 
 }

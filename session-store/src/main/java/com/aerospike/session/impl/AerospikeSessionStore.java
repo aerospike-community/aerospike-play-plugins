@@ -38,6 +38,7 @@ import com.aerospike.client.policy.Policy;
 import com.aerospike.client.policy.RecordExistsAction;
 import com.aerospike.client.policy.WritePolicy;
 import com.aerospike.session.CheckAndSetOperation;
+import com.aerospike.session.SessionIDProvider;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStore;
 import com.aerospike.session.SessionStoreException;
@@ -57,6 +58,8 @@ import com.aerospike.transcoder.Transcoder;
  */
 @Slf4j
 public class AerospikeSessionStore implements SessionStore {
+
+    private final SessionIDProvider sessionIDProvider;
     /**
      * The session store configuration.
      */
@@ -78,10 +81,11 @@ public class AerospikeSessionStore implements SessionStore {
      * @param transcoder
      */
     @Inject
-    public AerospikeSessionStore(AerospikeSessionStoreConfig config,
+    public AerospikeSessionStore(SessionIDProvider sessionIDProvider,
+            AerospikeSessionStoreConfig config,
             @SessionStoreAerospikeClient AerospikeClient client,
             @SessionStoreTranscoder Transcoder transcoder) {
-        super();
+        this.sessionIDProvider = sessionIDProvider;
         this.config = config;
         this.client = client;
         this.transcoder = transcoder;
@@ -206,12 +210,12 @@ public class AerospikeSessionStore implements SessionStore {
      *      java.lang.String, java.lang.Object)
      */
     @Override
-    public void put(final String sessionId, final String key, final Object value)
+    public void put(final String key, final Object value)
             throws SessionStoreException {
         Object newValue = reformat(value, 0);
         log.debug("Adding new record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                sessionId);
+                sessionIDProvider.get());
         WritePolicy writePolicy = new WritePolicy();
         writePolicy.expiration = config.getSessionMaxAge();
 
@@ -226,12 +230,12 @@ public class AerospikeSessionStore implements SessionStore {
      *      java.util.Map)
      */
     @Override
-    public void putAll(final String sessionId, final Map<String, Object> map)
+    public void putAll(final Map<String, Object> map)
             throws SessionStoreException {
 
         log.debug("Adding new Records");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                sessionId);
+                sessionIDProvider.get());
         ArrayList<Bin> binList = new ArrayList<Bin>();
         for (Entry<String, Object> entry : map.entrySet()) {
             Bin bin = new Bin(entry.getKey(), reformat(entry.getValue(), 0));
@@ -251,15 +255,15 @@ public class AerospikeSessionStore implements SessionStore {
      *      java.lang.String)
      */
     @Override
-    public Object get(final String sessionId, final String key)
-            throws SessionNotFound, SessionStoreException {
+    public Object get(final String key) throws SessionNotFound,
+            SessionStoreException {
         try {
             log.debug("Fetching given Record");
             WritePolicy writePolicy = new WritePolicy();
             writePolicy.expiration = config.getSessionMaxAge();
             writePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
             Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                    sessionId);
+                    sessionIDProvider.get());
 
             Record record = client.operate(writePolicy, sessionID,
                     Operation.touch(), Operation.get(key));
@@ -279,15 +283,15 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.aeroshift.session.SessionStore#getAll(java.lang.String)
      */
     @Override
-    public Map<String, Object> getAll(final String sessionId)
-            throws SessionNotFound, SessionStoreException {
+    public Map<String, Object> getAll() throws SessionNotFound,
+            SessionStoreException {
         try {
             log.debug("Fetching new records");
             WritePolicy writePolicy = new WritePolicy();
             writePolicy.expiration = config.getSessionMaxAge();
             writePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
             Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                    sessionId);
+                    sessionIDProvider.get());
             Record record = client.operate(writePolicy, sessionID,
                     Operation.touch(), Operation.get());
             if (record == null) {
@@ -321,12 +325,11 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.aeroshift.session.SessionStore#touch(java.lang.String)
      */
     @Override
-    public void touch(final String sessionId) throws SessionNotFound,
-            SessionStoreException {
+    public void touch() throws SessionNotFound, SessionStoreException {
         try {
             log.debug("Touch method");
             Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                    sessionId);
+                    sessionIDProvider.get());
             WritePolicy writePolicy = new WritePolicy();
             writePolicy.expiration = config.getSessionMaxAge();
             writePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
@@ -345,10 +348,10 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.aeroshift.session.SessionStore#destroy(java.lang.String)
      */
     @Override
-    public void destroy(final String sessionId) throws SessionStoreException {
+    public void destroy() throws SessionStoreException {
         log.debug("Destroying the record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                sessionId);
+                sessionIDProvider.get());
         client.delete(null, sessionID);
     }
 
@@ -358,10 +361,10 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.aeroshift.session.SessionStore#exists(java.lang.String)
      */
     @Override
-    public boolean exists(final String sessionId) throws SessionStoreException {
+    public boolean exists() throws SessionStoreException {
         log.debug("Checking for existence of the record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                sessionId);
+                sessionIDProvider.get());
         boolean itsHere = client.exists(new Policy(), sessionID);
         return itsHere;
 
@@ -374,12 +377,12 @@ public class AerospikeSessionStore implements SessionStore {
      *      com.aerospike.session.SessionOperation)
      */
     @Override
-    public void checkAndSet(String sessionId, CheckAndSetOperation sesOp)
+    public void checkAndSet(CheckAndSetOperation sesOp)
             throws SessionStoreException, SessionNotFound {
 
         log.debug("Reading the contents of the record");
         Key sessionID = new Key(config.getNamespace(), config.getSet(),
-                sessionId);
+                sessionIDProvider.get());
         for (int i = 0; i < config.getCheckAndSetMaxTries(); i++) {
             Record record = client.get(null, sessionID);
             Map<String, Object> curBins = recordToMap(record);
@@ -404,6 +407,17 @@ public class AerospikeSessionStore implements SessionStore {
             }
 
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.aerospike.session.SessionStore#create()
+     */
+    @Override
+    public void create() throws SessionStoreException {
+        put("exists", true);
+
     }
 
 }

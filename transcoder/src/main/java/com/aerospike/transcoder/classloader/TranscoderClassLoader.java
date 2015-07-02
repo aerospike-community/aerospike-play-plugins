@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aerospike.cache;
+package com.aerospike.transcoder.classloader;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -27,14 +27,14 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
- * Binding annotation for AerospikeClient to use in the cache.
- * 
+ * Binding annotation for classloader to be used in transcoder.
+ *
  * @author akshay
  *
  */
 @BindingAnnotation
 @Target({ FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
-public @interface CacheAerospikeClient {
+public @interface TranscoderClassLoader {
 
 }

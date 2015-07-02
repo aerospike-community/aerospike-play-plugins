@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package com.aerospike.cache;
+package com.aerospike.session;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import com.google.inject.BindingAnnotation;
+import javax.inject.Provider;
 
 /**
- * Binding annotation for AerospikeClient to use in the cache.
+ * A provider for current sessionId.
  * 
  * @author akshay
  *
  */
-@BindingAnnotation
-@Target({ FIELD, PARAMETER, METHOD })
-@Retention(RUNTIME)
-public @interface CacheAerospikeClient {
+public interface SessionIDProvider extends Provider<String> {
 
 }

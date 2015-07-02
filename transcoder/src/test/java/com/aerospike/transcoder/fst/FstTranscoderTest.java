@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.aerospike.transcoder.TranscodeException;
+import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
 import com.aerospike.transcoder.jackson.Student;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -44,7 +45,8 @@ public class FstTranscoderTest {
         student.setRollno("cs12b1005");
         student.setSubject("Computer SCience");
         // FstTranscoder fst = new FstTranscoder();
-        Injector injector = Guice.createInjector(new FstconfigModule());
+        Injector injector = Guice.createInjector(new FstconfigModule(),
+                new TranscoderSystemClassLoaderModule());
         FstTranscoder fst = injector.getInstance(FstTranscoder.class);
         byte[] barray;
 

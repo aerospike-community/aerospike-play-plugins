@@ -84,6 +84,10 @@ public class AerospikeSessionStoreConfig {
      * The fully qualified transcoder class name.
      */
     private final String transcoderFQCN;
+    /**
+     * The fully qualified session id provider class name.
+     */
+    private final String sessionIdProviderFQCN;
 
     /**
      * Private constructor required by a lot of serializers. e.g. Jackson,
@@ -95,7 +99,6 @@ public class AerospikeSessionStoreConfig {
     @SuppressWarnings("unused")
     private AerospikeSessionStoreConfig() {
         this(null, null, null, null, null, 0, FstTranscoder.class
-                .getCanonicalName(), 4);
+                .getCanonicalName(), null, 4);
     }
-
 }

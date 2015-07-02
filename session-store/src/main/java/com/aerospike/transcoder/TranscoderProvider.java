@@ -20,22 +20,35 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import lombok.RequiredArgsConstructor;
-
 import com.aerospike.session.impl.AerospikeSessionStoreConfig;
+import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.google.inject.Injector;
 
 /**
  * Provider for Transcoder interface
- * 
+ *
  * @author akshay
  *
  */
 @Singleton
-@RequiredArgsConstructor(onConstructor = @_(@Inject))
 public class TranscoderProvider implements Provider<Transcoder> {
     private final AerospikeSessionStoreConfig config;
     private final Injector injector;
+    private final ClassLoader classLoader;
+
+    /**
+     * @param config
+     * @param injector
+     * @param classLoader
+     */
+    @Inject
+    public TranscoderProvider(AerospikeSessionStoreConfig config,
+            Injector injector, @TranscoderClassLoader ClassLoader classLoader) {
+        super();
+        this.config = config;
+        this.injector = injector;
+        this.classLoader = classLoader;
+    }
 
     @SuppressWarnings("unchecked")
     /**
@@ -48,7 +61,8 @@ public class TranscoderProvider implements Provider<Transcoder> {
         String classname = config.getTranscoderFQCN();
         Class<Transcoder> transcoderClass;
         try {
-            transcoderClass = (Class<Transcoder>) Class.forName(classname);
+            transcoderClass = (Class<Transcoder>) classLoader
+                    .loadClass(classname);
             return injector.getInstance(transcoderClass);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Unknown transcode class "

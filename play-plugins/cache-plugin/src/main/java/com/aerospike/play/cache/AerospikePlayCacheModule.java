@@ -16,9 +16,6 @@
 package com.aerospike.play.cache;
 
 import lombok.RequiredArgsConstructor;
-
-import org.nustaq.serialization.FSTConfiguration;
-
 import play.Configuration;
 import play.Environment;
 import play.cache.CacheApi;
@@ -26,6 +23,8 @@ import play.cache.CacheApi;
 import com.aerospike.cache.AerospikeCacheConfig;
 import com.aerospike.cache.AerospikeClientModule;
 import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.transcoder.classloader.TranscoderClassLoader;
+import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -39,19 +38,18 @@ import com.google.inject.Singleton;
 @RequiredArgsConstructor
 public class AerospikePlayCacheModule extends AbstractModule {
 
-	private final Environment environment;
-	@SuppressWarnings("unused")
-	private final Configuration configuration;
-	
-	@Singleton
-	@Provides
-	FSTConfiguration getFstConfiguration(){
-		 FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
-	        conf.setClassLoader(environment.classLoader());
-	        return conf;
-	}
-    
-	/**
+    private final Environment environment;
+    @SuppressWarnings("unused")
+    private final Configuration configuration;
+
+    @Singleton
+    @Provides
+    @TranscoderClassLoader
+    ClassLoader getClassLoader() {
+        return environment.classLoader();
+    }
+
+    /**
      * (non-Javadoc)
      *
      * @see com.google.inject.AbstractModule#configure()
@@ -60,7 +58,9 @@ public class AerospikePlayCacheModule extends AbstractModule {
     protected void configure() {
         install(new AerospikeClientModule());
         install(new TranscoderModule());
-        bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class).in(Singleton.class);
+        install(new FstconfigModule());
+        bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class).in(
+                Singleton.class);
         bind(CacheApi.class).to(AerospikeCacheApi.class).in(Singleton.class);
     }
 

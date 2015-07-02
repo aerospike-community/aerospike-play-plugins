@@ -1,6 +1,5 @@
 import java.lang.reflect.Method;
 
-import lombok.extern.slf4j.Slf4j;
 import play.Application;
 import play.GlobalSettings;
 import play.libs.F.Promise;
@@ -9,11 +8,10 @@ import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
 
-import com.aerospike.play.sessionstore.AerospikePlaySessionStore;
+import com.aerospike.session.SessionStore;
 
-@Slf4j
 public class Global extends GlobalSettings {
-    private AerospikePlaySessionStore store;
+    private SessionStore store;
 
     /**
      * (non-Javadoc)
@@ -43,8 +41,7 @@ public class Global extends GlobalSettings {
      */
     @Override
     public void onStart(Application application) {
-        store = application.injector().instanceOf(
-                AerospikePlaySessionStore.class);
+        store = application.injector().instanceOf(SessionStore.class);
         super.beforeStart(application);
     }
 

@@ -15,24 +15,17 @@
  */
 package controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-import com.aerospike.play.sessionstore.AerospikePlaySessionStore;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStore;
 import com.aerospike.session.SessionStoreException;
 
-import play.*;
 import play.data.Form;
 import play.mvc.*;
 import views.html.*;
@@ -40,7 +33,7 @@ import views.html.*;
 @RequiredArgsConstructor(onConstructor=@_(@Inject))
 public class Application extends Controller {
 
-	private final AerospikePlaySessionStore store;
+	private final SessionStore store;
 	
 	public Result index() {
     	
@@ -52,7 +45,7 @@ public class Application extends Controller {
 	
 	}
 	
-	public Result createItem()
+	public Result createItem() throws SessionStoreException, SessionNotFound
 	{
 		Form <ShoppingItem> form = Form.form(ShoppingItem.class).bindFromRequest();
 		if(form.hasErrors())
@@ -67,9 +60,13 @@ public class Application extends Controller {
 			return ok(addnew.render(data));
 		}
 	}
-	public Result list(){
+	@SuppressWarnings("unchecked")
+	public Result list() throws SessionStoreException, SessionNotFound{
 		//ShoppingCart checkcart = (ShoppingCart) store.get("shopping-cart");
 		List<ShoppingItem> checkcart = (List<ShoppingItem>) store.get("shopping-list");
+		if(checkcart == null ) {
+			checkcart = Collections.emptyList();
+		}
 		return ok(list.render(checkcart));
 		
 	}

@@ -16,6 +16,7 @@
 
 package com.aerospike.session.impl;
 
+import com.aerospike.session.SessionIDProvider;
 import com.aerospike.session.SessionStore;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
@@ -36,6 +37,8 @@ public class SessionStoreModule extends AbstractModule {
     protected void configure() {
         bind(SessionStore.class).to(AerospikeSessionStore.class).in(
                 Singleton.class);
+        bind(SessionIDProvider.class).toProvider(
+                SessionIDProviderProvider.class);
 
     }
 }

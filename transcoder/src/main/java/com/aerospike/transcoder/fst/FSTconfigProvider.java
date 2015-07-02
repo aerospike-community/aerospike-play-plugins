@@ -16,10 +16,13 @@
 
 package com.aerospike.transcoder.fst;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.nustaq.serialization.FSTConfiguration;
+
+import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 
 /**
  * Provider for FSTConfiguration
@@ -29,6 +32,16 @@ import org.nustaq.serialization.FSTConfiguration;
  */
 @Singleton
 public class FSTconfigProvider implements Provider<FSTConfiguration> {
+    public final ClassLoader classLoader;
+
+    /**
+     * @param classLoader
+     */
+    @Inject
+    public FSTconfigProvider(@TranscoderClassLoader ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
     /**
      * (non-Javadoc)
      *
@@ -37,7 +50,7 @@ public class FSTconfigProvider implements Provider<FSTConfiguration> {
     @Override
     public FSTConfiguration get() {
         FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
-        conf.setClassLoader(getClass().getClassLoader());
+        conf.setClassLoader(classLoader);
         return conf;
     }
 }

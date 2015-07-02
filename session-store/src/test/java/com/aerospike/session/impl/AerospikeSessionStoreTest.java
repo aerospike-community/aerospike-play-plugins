@@ -30,6 +30,7 @@ import org.junit.Test;
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
+import com.aerospike.session.SessionIDProvider;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStoreException;
 import com.google.inject.Guice;
@@ -63,9 +64,9 @@ public class AerospikeSessionStoreTest {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
 
-        store.put("aero", "location", "bangalore");
+        store.put("location", "bangalore");
 
-        Assert.assertEquals("bangalore", store.get("aero", "location"));
+        Assert.assertEquals("bangalore", store.get("location"));
     }
 
     /**
@@ -83,9 +84,9 @@ public class AerospikeSessionStoreTest {
         student.name = "RocketRaccoon";
         student.rollno = "A1";
         student.subject = "Physics";
-        store.put("RR", "student", student);
+        store.put("student", student);
 
-        Assert.assertEquals(student, store.get("RR", "student"));
+        Assert.assertEquals(student, store.get("student"));
     }
 
     /**
@@ -104,8 +105,8 @@ public class AerospikeSessionStoreTest {
         List<String> stringlist = new ArrayList<String>();
         stringlist.add("alphabets");
         stringlist.add("numericals");
-        store.put("alphalist", "studentlist", stringlist);
-        store.put("betalist", "studentlist", studentlist);
+        store.put("studentlist", stringlist);
+        store.put("studentlist", studentlist);
     }
 
     /**
@@ -125,9 +126,9 @@ public class AerospikeSessionStoreTest {
         map.put("home", "gotham");
         map.put("mentor", "Ra's AlGhul");
         map.put("BFF", "Joker");
-        store.putAll("bruceWayne", map);
+        store.putAll(map);
 
-        Assert.assertEquals("Joker", store.get("bruceWayne", "BFF"));
+        Assert.assertEquals("Joker", store.get("BFF"));
     }
 
     /**
@@ -142,8 +143,8 @@ public class AerospikeSessionStoreTest {
     public void testGet() throws SessionStoreException, SessionNotFound {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
-        store.put("Stark", "name", "Tony");
-        Assert.assertEquals("Tony", store.get("Stark", "name"));
+        store.put("name", "Tony");
+        Assert.assertEquals("Tony", store.get("name"));
     }
 
     /**
@@ -162,9 +163,9 @@ public class AerospikeSessionStoreTest {
         map.put("home", "gotham");
         map.put("mentor", "Ra's AlGhul");
         map.put("BFF", "Joker");
-        store.putAll("bruceWayne", map);
+        store.putAll(map);
 
-        Assert.assertEquals("Joker", store.get("bruceWayne", "BFF"));
+        Assert.assertEquals("Joker", store.get("BFF"));
     }
 
     /**
@@ -182,15 +183,17 @@ public class AerospikeSessionStoreTest {
 
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
-        store.put("defsession", "name", "jane doe");
+        SessionIDProvider sessionIDProvider = injector
+                .getInstance(SessionIDProvider.class);
+        store.put("name", "jane doe");
         @Cleanup
         AerospikeClient client = new AerospikeClient("127.0.0.1", 3000);
-        Key key = new Key("test", "users", "defsession");
+        Key key = new Key("test", "users", sessionIDProvider.get());
         Record record1 = client.get(null, key);
         int oldExp = record1.expiration;
         System.out.println("old expiry:" + oldExp);
         Thread.sleep(5000);
-        store.get("defsession", "name");
+        store.get("name");
         Record record2 = client.get(null, key);
         int newExp = record2.expiration;
         System.out.println("new expiry:" + newExp);
@@ -210,12 +213,12 @@ public class AerospikeSessionStoreTest {
     public void testDestroy() throws SessionStoreException, SessionNotFound {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
-        store.put("mysession", "name", "john doe");
-        Assert.assertEquals("john doe", store.get("mysession", "name"));
-        store.destroy("mysession");
+        store.put("name", "john doe");
+        Assert.assertEquals("john doe", store.get("name"));
+        store.destroy();
 
         try {
-            store.get("mysession", "name");
+            store.get("name");
             Assert.fail("Exception not thrown");
         } catch (SessionNotFound e) {
             System.out.println("The session successfully destroyed!!");
@@ -232,8 +235,8 @@ public class AerospikeSessionStoreTest {
     public void testExists() {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
-        store.put("mathewMurdock", "alias", "dareDevil");
-        boolean response = store.exists("mathewMurdock");
+        store.put("alias", "dareDevil");
+        boolean response = store.exists();
         Assert.assertTrue("The record exists", response);
     }
 
@@ -250,10 +253,10 @@ public class AerospikeSessionStoreTest {
         List<Student> studentlist = new ArrayList<Student>();
         studentlist.add(new Student("John doe", "QWERTY101", "TOC"));
         studentlist.add(new Student("Jane doe", "ALPHA101", "DSA"));
-        store.put("alphalist", "studentlist", studentlist);
+        store.put("studentlist", studentlist);
 
-        System.out.println(store.get("alphalist", "studentlist"));
-        Assert.assertEquals(store.get("alphalist", "studentlist"), studentlist);
+        System.out.println(store.get("studentlist"));
+        Assert.assertEquals(store.get("studentlist"), studentlist);
     }
 
     /**
@@ -271,9 +274,9 @@ public class AerospikeSessionStoreTest {
         map.put(new GateKey(true, false), "FALSE");
         map.put(new GateKey(false, true), "FALSE");
         map.put(new GateKey(false, false), "FALSE");
-        store.put("AndGatelogic", "AND gate", map);
-        System.out.println(store.get("AndGatelogic", "AND gate"));
-        Assert.assertEquals(store.get("AndGatelogic", "AND gate"), map);
+        store.put("AND gate", map);
+        System.out.println(store.get("AND gate"));
+        Assert.assertEquals(store.get("AND gate"), map);
     }
 
     /**
@@ -300,13 +303,13 @@ public class AerospikeSessionStoreTest {
         ORgate.put(new GateKey(false, true), "FALSE");
         ORgate.put(new GateKey(false, false), "FALSE");
         boolist.add(ORgate);
-        store.put("Gatelogic", "allgates", boolist);
-        Assert.assertEquals(store.get("Gatelogic", "allgates"), boolist);
+        store.put("allgates", boolist);
+        Assert.assertEquals(store.get("allgates"), boolist);
     }
 
     /**
      * Testing for Map containing List of POJOS
-     * 
+     *
      * @throws SessionStoreException
      * @throws SessionNotFound
      */
@@ -323,7 +326,25 @@ public class AerospikeSessionStoreTest {
         Map<Course, List<Student>> school = new HashMap<Course, List<Student>>();
         school.put(new Course(3, "John Doe"), class1);
         school.put(new Course(1, "Jane Doe"), class2);
-        store.put("school", "classroom", school);
-        Assert.assertEquals(store.get("school", "classroom"), school);
+        store.put("classroom", school);
+        Assert.assertEquals(store.get("classroom"), school);
+    }
+
+    @Test
+    public void testCreate() {
+        AerospikeSessionStore store = injector
+                .getInstance(AerospikeSessionStore.class);
+        try {
+            store.get("exists");
+            Assert.fail("Session record not created");
+        } catch (SessionNotFound e) {
+            System.out.println("The session not found. Creating new session");
+            store.create();
+            try {
+                store.get("exists");
+            } catch (SessionStoreException | SessionNotFound e1) {
+
+            }
+        }
     }
 }

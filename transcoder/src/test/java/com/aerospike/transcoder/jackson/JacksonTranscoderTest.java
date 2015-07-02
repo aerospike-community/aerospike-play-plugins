@@ -38,7 +38,8 @@ public class JacksonTranscoderTest {
         student.setName("Akshay");
         student.setRollno("cs12b1005");
         student.setSubject("asadsfa");
-        JacksonTranscoder jackson = new JacksonTranscoder(new ObjectMapper());
+        JacksonTranscoder jackson = new JacksonTranscoder(new ObjectMapper(),
+                getClass().getClassLoader());
         byte[] barray = jackson.encode(student);
         Assert.assertEquals(student, jackson.decode(barray));
 

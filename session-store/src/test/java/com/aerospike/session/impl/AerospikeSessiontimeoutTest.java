@@ -28,8 +28,11 @@ import org.junit.Test;
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
+import com.aerospike.session.SessionIDProvider;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStoreException;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * @author akshay
@@ -48,12 +51,13 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_defaultTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
-        store.put("default_session", "name", "John Doe");
-        store.put("default_session", "roll_no", 21);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        store.put("name", "John Doe");
+        store.put("roll_no", 21);
         Thread.sleep(10000);
-        Assert.assertEquals("John Doe", store.get("default_session", "name"));
+        Assert.assertEquals("John Doe", store.get("name"));
     }
 
     /**
@@ -68,12 +72,13 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
-        store.put("small_session", "name", "Jane Doe");
-        store.put("small_session", "roll_no", 21);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        store.put("name", "Jane Doe");
+        store.put("roll_no", 21);
         Thread.sleep(5000);
-        Assert.assertEquals("Jane Doe", store.get("small_session", "name"));
+        Assert.assertEquals("Jane Doe", store.get("name"));
     }
 
     /**
@@ -87,13 +92,14 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
-        store.put("small_session", "name", "Jane Doe");
-        store.put("small_session", "roll_no", 21);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        store.put("name", "Jane Doe");
+        store.put("roll_no", 21);
         try {
             Thread.sleep(10000);
-            store.get("small_session", "name");
+            store.get("name");
             Assert.fail("Record still found");
         } catch (SessionNotFound e) {
             System.out.println("Session expired!");
@@ -107,21 +113,25 @@ public class AerospikeSessiontimeoutTest {
     @Test
     public void smallTTLtestGetmethod() throws IOException,
             InterruptedException, SessionStoreException, SessionNotFound {
+        Injector injector = Guice.createInjector(new MasterModule());
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
-        store.put("peterParker", "alias", "spidey");
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        store.put("alias", "spidey");
+        SessionIDProvider sessionIDProvider = injector
+                .getInstance(SessionIDProvider.class);
         @Cleanup
         AerospikeClient client = new AerospikeClient("127.0.0.1", 3000);
-        Key key = new Key("test", "users", "peterParker");
+        Key key = new Key("test", "users", sessionIDProvider.get());
         Record record1 = client.get(null, key);
         int oldExp = record1.expiration;
         Thread.sleep(5000);
-        store.get("peterParker", "alias");
+        store.get("alias");
         Record record2 = client.get(null, key);
         int newExp = record2.expiration;
         Assert.assertTrue(newExp - oldExp >= 5);
@@ -134,25 +144,29 @@ public class AerospikeSessiontimeoutTest {
     @Test
     public void smallTTLtestGetAllmethod() throws IOException,
             InterruptedException, SessionStoreException, SessionNotFound {
+        Injector injector = Guice.createInjector(new MasterModule());
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        SessionIDProvider sessionIDProvider = injector
+                .getInstance(SessionIDProvider.class);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("home", "gotham");
         map.put("mentor", "Ra's AlGhul");
         map.put("BFF", "Joker");
-        store.putAll("bruceWayne", map);
+        store.putAll(map);
         @Cleanup
         AerospikeClient client = new AerospikeClient("127.0.0.1", 3000);
-        Key key = new Key("test", "users", "bruceWayne");
+        Key key = new Key("test", "users", sessionIDProvider.get());
         Record record1 = client.get(null, key);
         int oldExp = record1.expiration;
         Thread.sleep(5000);
-        store.getAll("bruceWayne");
+        store.getAll();
         Record record2 = client.get(null, key);
         int newExp = record2.expiration;
         Assert.assertTrue(newExp - oldExp >= 5);
@@ -169,11 +183,12 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_neverexpireTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(config,
-                clientProvider.get(), null);
-        store.put("nexpire_session", "name", "Joe Doe");
-        store.put("nexpire_session", "roll_no", 21);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                new DefaultSessionIDProvider(), config, clientProvider.get(),
+                null);
+        store.put("name", "Joe Doe");
+        store.put("roll_no", 21);
         Thread.sleep(10000);
-        Assert.assertEquals("Joe Doe", store.get("nexpire_session", "name"));
+        Assert.assertEquals("Joe Doe", store.get("name"));
     }
 }

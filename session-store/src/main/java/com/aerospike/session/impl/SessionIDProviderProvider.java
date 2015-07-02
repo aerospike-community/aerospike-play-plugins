@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,30 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder;
+package com.aerospike.session.impl;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.aerospike.cache.AerospikeCacheConfig;
+import com.aerospike.session.SessionIDProvider;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.google.inject.Injector;
 
 /**
- * Provider for Transcoder interface
- *
  * @author akshay
  *
  */
 @Singleton
-public class TranscoderProvider implements Provider<Transcoder> {
-    private final AerospikeCacheConfig config;
+public class SessionIDProviderProvider implements Provider<SessionIDProvider> {
+
+    private final AerospikeSessionStoreConfig config;
     private final Injector injector;
     private final ClassLoader classLoader;
 
-    /**
-     * Create the provider.
-     * 
-     * @param config
-     * @param injector
-     * @param classLoader
-     */
     @Inject
-    public TranscoderProvider(AerospikeCacheConfig config, Injector injector,
-            @TranscoderClassLoader ClassLoader classLoader) {
+    public SessionIDProviderProvider(AerospikeSessionStoreConfig config,
+            Injector injector, @TranscoderClassLoader ClassLoader classLoader) {
         this.config = config;
         this.injector = injector;
         this.classLoader = classLoader;
@@ -53,22 +45,22 @@ public class TranscoderProvider implements Provider<Transcoder> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Transcoder get() {
-        String classname = config.getTranscoderFQCN();
-        Class<Transcoder> transcoderClass;
+    public SessionIDProvider get() {
+        String classname = config.getSessionIdProviderFQCN();
+        Class<SessionIDProvider> sessionIDProviderClass;
         try {
-            transcoderClass = (Class<Transcoder>) classLoader
+            sessionIDProviderClass = (Class<SessionIDProvider>) classLoader
                     .loadClass(classname);
-            return injector.getInstance(transcoderClass);
+            return injector.getInstance(sessionIDProviderClass);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unknown transcode class "
-                    + config.getTranscoderFQCN(), e);
+            throw new RuntimeException("Unknown SessionIDProvider class "
+                    + config.getSessionIdProviderFQCN(), e);
         }
-
     }
+
 }

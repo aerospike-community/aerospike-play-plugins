@@ -23,8 +23,7 @@ import org.junit.Test;
 
 import com.aerospike.session.impl.AerospikeSessionStoreConfig;
 import com.aerospike.session.impl.ConfigReader;
-import com.aerospike.session.impl.StoreConfigmodule;
-import com.aerospike.transcoder.TranscoderProvider;
+import com.aerospike.session.impl.MasterModule;
 import com.aerospike.transcoder.fst.FstTranscoder;
 import com.aerospike.transcoder.jackson.JacksonTranscoder;
 import com.google.inject.Guice;
@@ -41,11 +40,11 @@ public class TranscoderModuleTest {
      */
     @Test
     public void testDefault() {
-        Injector injector = Guice.createInjector(new StoreConfigmodule());
+        Injector injector = Guice.createInjector(new MasterModule());
         AerospikeSessionStoreConfig config = injector
                 .getInstance(AerospikeSessionStoreConfig.class);
         TranscoderProvider transcoderProvider = new TranscoderProvider(config,
-                injector);
+                injector, getClass().getClassLoader());
         transcoderProvider.get();
         Assert.assertTrue(transcoderProvider.get() instanceof FstTranscoder);
     }
@@ -55,12 +54,12 @@ public class TranscoderModuleTest {
      */
     @Test
     public void testJackson() throws IOException {
-        Injector injector = Guice.createInjector(new StoreConfigmodule());
+        Injector injector = Guice.createInjector(new MasterModule());
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_jackson.cfg");
         TranscoderProvider transcoderProvider = new TranscoderProvider(config,
-                injector);
+                injector, getClass().getClassLoader());
         transcoderProvider.get();
         Assert.assertTrue(transcoderProvider.get() instanceof JacksonTranscoder);
     }

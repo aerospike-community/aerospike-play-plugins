@@ -10,10 +10,10 @@ dist/
 RUNNING_PID
 activator*
 build/
-.gradle/
+.gradle
 .settings
-config/
-gradle/
+config
+gradle
 .cache-main
 .externalToolBuilders
 *~

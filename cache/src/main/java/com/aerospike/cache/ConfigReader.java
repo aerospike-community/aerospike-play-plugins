@@ -28,22 +28,43 @@ import com.aerospike.client.Host;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+/**
+ * Read configuration from config file
+ *
+ * @author akshay
+ *
+ */
 @Slf4j
 @Singleton
 public class ConfigReader {
-	
-	public AerospikeCacheConfig getConfiguration(String configresourcename) throws IOException{
-		final ObjectMapper mapper = new ObjectMapper();
-		log.debug("Reading cache config frm {}.",configresourcename);
-		@Cleanup
-		final InputStream istream = getClass().getClassLoader().getResourceAsStream(configresourcename);
-		SimpleModule module = new SimpleModule();
-		module.addDeserializer(Host.class, new HostDeserializer());
-		mapper.registerModule(module);
-		return mapper.readValue(istream,AerospikeCacheConfig.class);
-	}
-	
-	public AerospikeCacheConfig getConfiguration() throws IOException{
-		return getConfiguration("aerospike-cache.cfg");
-	}
+
+    /**
+     * Read configuration from given file
+     *
+     * @param configresourcename
+     * @return
+     * @throws IOException
+     */
+    public AerospikeCacheConfig getConfiguration(String configresourcename)
+            throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        log.debug("Reading cache config frm {}.", configresourcename);
+        @Cleanup
+        final InputStream istream = getClass().getClassLoader()
+                .getResourceAsStream(configresourcename);
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Host.class, new HostDeserializer());
+        mapper.registerModule(module);
+        return mapper.readValue(istream, AerospikeCacheConfig.class);
+    }
+
+    /**
+     * Read configuration from default file
+     * 
+     * @return
+     * @throws IOException
+     */
+    public AerospikeCacheConfig getConfiguration() throws IOException {
+        return getConfiguration("aerospike-cache.cfg");
+    }
 }

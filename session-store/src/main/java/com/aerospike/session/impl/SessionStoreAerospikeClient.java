@@ -27,6 +27,8 @@ import java.lang.annotation.Target;
 import com.google.inject.BindingAnnotation;
 
 /**
+ * Binding annotation for AerospikeClient to use in the session-store.
+ * 
  * @author akshay
  *
  */

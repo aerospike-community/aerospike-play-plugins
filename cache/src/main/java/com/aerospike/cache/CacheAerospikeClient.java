@@ -30,6 +30,7 @@ import com.google.inject.BindingAnnotation;
 @Target({ FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
 /**
+ * Binding annotation for AerospikeClient to use in the cache.
  * @author akshay
  *
  */

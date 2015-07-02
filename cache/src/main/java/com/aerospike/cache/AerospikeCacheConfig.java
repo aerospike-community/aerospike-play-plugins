@@ -25,21 +25,28 @@ import lombok.ToString;
 import com.aerospike.client.Host;
 import com.aerospike.transcoder.fst.FstTranscoder;
 
+/**
+ * Config class for Aerospike Cache
+ *
+ * @author akshay
+ *
+ */
 @Getter
 @RequiredArgsConstructor
 @ToString
 public class AerospikeCacheConfig {
-	private final List<Host> hosts;
-	private final String username;
-	private final String password;
-	private final String namespace;
-	private final String set;
-	private final String bin;
-	private final String transcoderFQCN;
-	
-	@SuppressWarnings("unused")
-	private AerospikeCacheConfig(){
-		this(null,null,null,null,null,null,FstTranscoder.class.getCanonicalName());
-	}
-	
+    private final List<Host> hosts;
+    private final String username;
+    private final String password;
+    private final String namespace;
+    private final String set;
+    private final String bin;
+    private final String transcoderFQCN;
+
+    @SuppressWarnings("unused")
+    private AerospikeCacheConfig() {
+        this(null, null, null, null, null, null, FstTranscoder.class
+                .getCanonicalName());
+    }
+
 }

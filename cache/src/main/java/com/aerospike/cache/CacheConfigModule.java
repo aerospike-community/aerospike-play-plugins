@@ -19,12 +19,23 @@ package com.aerospike.cache;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
-public class CacheConfigModule extends AbstractModule{
+/**
+ *
+ * @author akshay
+ *
+ */
+public class CacheConfigModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		bind(AerospikeCacheConfig.class).toProvider(CacheConfigProvider.class).in(Singleton.class);
-		
-	}
-	
+    /**
+     * (non-Javadoc)
+     *
+     * @see com.google.inject.AbstractModule#configure()
+     */
+    @Override
+    protected void configure() {
+        bind(AerospikeCacheConfig.class).toProvider(CacheConfigProvider.class)
+        .in(Singleton.class);
+
+    }
+
 }

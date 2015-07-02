@@ -19,16 +19,27 @@ import java.io.IOException;
 
 import javax.inject.Provider;
 
-public class CacheConfigProvider implements Provider<AerospikeCacheConfig>{
+/**
+ * Provider for CacheConfig
+ *
+ * @author akshay
+ *
+ */
+public class CacheConfigProvider implements Provider<AerospikeCacheConfig> {
 
-	@Override
-	public AerospikeCacheConfig get() {
-		ConfigReader configreader = new ConfigReader();
-		try{
-			return configreader.getConfiguration();
-		}catch (IOException e){
-			throw new RuntimeException(e);
-		}
-	}
+    /**
+     * (non-Javadoc)
+     * 
+     * @see javax.inject.Provider#get()
+     */
+    @Override
+    public AerospikeCacheConfig get() {
+        ConfigReader configreader = new ConfigReader();
+        try {
+            return configreader.getConfiguration();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

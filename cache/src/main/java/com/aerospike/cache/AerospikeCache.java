@@ -37,6 +37,12 @@ import com.aerospike.transcoder.CacheTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
 
+/**
+ * Aerospike Implementation of Cache
+ *
+ * @author akshay
+ *
+ */
 @Slf4j
 public class AerospikeCache {
 
@@ -173,6 +179,13 @@ public class AerospikeCache {
         }
     }
 
+    /**
+     * Set up the cache value
+     *
+     * @param key
+     * @param Value
+     * @param expiration
+     */
     public void set(String key, Object Value, int expiration) {
         Object newValue = reformat(Value, 0);
         log.debug("Storing in cache");
@@ -183,6 +196,12 @@ public class AerospikeCache {
         client.put(writepolicy, cacheKey, bin);
     }
 
+    /**
+     * Get the value from the cache
+     *
+     * @param key
+     * @return
+     */
     public Object get(String key) {
         Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
         Record record = client.get(null, cacheKey);
@@ -193,6 +212,14 @@ public class AerospikeCache {
         }
     }
 
+    /**
+     * Get the value if it exists from the cache, else set the value and return
+     *
+     * @param key
+     * @param block
+     * @param expiration
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public <T> T getOrElse(String key, Callable<T> block, int expiration) {
         Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
@@ -212,6 +239,11 @@ public class AerospikeCache {
         }
     }
 
+    /**
+     * Clear the cache
+     * 
+     * @param key
+     */
     public void remove(String key) {
         log.debug("Clearing Cache");
         Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);

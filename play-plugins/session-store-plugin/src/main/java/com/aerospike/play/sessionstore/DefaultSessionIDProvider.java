@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.aerospike.session.SessionIDProvider;
 public class DefaultSessionIDProvider implements SessionIDProvider {
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
     @Override

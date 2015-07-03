@@ -4,7 +4,6 @@ apply from: "config/common.build.gradle"
 dependencies {
     // compile dependencies
     compile project(':aerospike-transcoder')
-    compile project(':aerospike-sessionid')
     compile 'com.aerospike:aerospike-client:3.+'
     compile 'commons-configuration:commons-configuration:1.10'
 

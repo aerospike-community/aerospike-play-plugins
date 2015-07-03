@@ -25,6 +25,8 @@ import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.google.inject.Injector;
 
 /**
+ * Provider for the SessionIDProvider
+ *
  * @author akshay
  *
  */
@@ -35,6 +37,12 @@ public class SessionIDProviderProvider implements Provider<SessionIDProvider> {
     private final Injector injector;
     private final ClassLoader classLoader;
 
+    /**
+     *
+     * @param config
+     * @param injector
+     * @param classLoader
+     */
     @Inject
     public SessionIDProviderProvider(AerospikeSessionStoreConfig config,
             Injector injector, @TranscoderClassLoader ClassLoader classLoader) {
@@ -43,9 +51,9 @@ public class SessionIDProviderProvider implements Provider<SessionIDProvider> {
         this.classLoader = classLoader;
     }
 
-    /*
+    /**
      * (non-Javadoc)
-     * 
+     *
      * @see javax.inject.Provider#get()
      */
     @SuppressWarnings("unchecked")

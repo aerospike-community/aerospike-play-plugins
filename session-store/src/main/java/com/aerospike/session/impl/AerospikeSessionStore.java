@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -256,7 +256,7 @@ public class AerospikeSessionStore implements SessionStore {
      */
     @Override
     public Object get(final String key) throws SessionNotFound,
-            SessionStoreException {
+    SessionStoreException {
         try {
             log.debug("Fetching given Record");
             WritePolicy writePolicy = new WritePolicy();
@@ -284,7 +284,7 @@ public class AerospikeSessionStore implements SessionStore {
      */
     @Override
     public Map<String, Object> getAll() throws SessionNotFound,
-            SessionStoreException {
+    SessionStoreException {
         try {
             log.debug("Fetching new records");
             WritePolicy writePolicy = new WritePolicy();
@@ -411,7 +411,7 @@ public class AerospikeSessionStore implements SessionStore {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.session.SessionStore#create()
      */
     @Override

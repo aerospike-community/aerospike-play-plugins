@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +179,7 @@ public class AerospikeSessionStoreTest {
      */
     @Test
     public void testTouch() throws SessionStoreException, SessionNotFound,
-            InterruptedException {
+    InterruptedException {
 
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
@@ -287,7 +287,7 @@ public class AerospikeSessionStoreTest {
      */
     @Test
     public void testGetListofMap() throws SessionStoreException,
-    SessionNotFound {
+            SessionNotFound {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
         List<Map<GateKey, String>> boolist = new ArrayList<Map<GateKey, String>>();
@@ -315,7 +315,7 @@ public class AerospikeSessionStoreTest {
      */
     @Test
     public void testGetMapofList() throws SessionStoreException,
-    SessionNotFound {
+            SessionNotFound {
         AerospikeSessionStore store = injector
                 .getInstance(AerospikeSessionStore.class);
         List<Student> class1 = new ArrayList<Student>();

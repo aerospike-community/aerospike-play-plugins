@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class ConfigReaderTest {
     @Test
     public void testGetConfiguration() throws IOException {
         final AerospikeSessionStoreConfig storeConfig = new ConfigReader()
-                .getConfiguration();
+        .getConfiguration();
         System.out.println(storeConfig);
         Assert.assertEquals("Akshay", storeConfig.getUsername());
 

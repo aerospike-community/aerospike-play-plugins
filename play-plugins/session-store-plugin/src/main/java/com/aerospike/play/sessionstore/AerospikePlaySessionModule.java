@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.aerospike.play.cache;
+
+package com.aerospike.play.sessionstore;
 
 import lombok.RequiredArgsConstructor;
 import play.Configuration;
 import play.Environment;
-import play.cache.CacheApi;
 
-import com.aerospike.cache.AerospikeCacheConfig;
-import com.aerospike.cache.AerospikeClientModule;
+import com.aerospike.session.impl.AerospikeClientModule;
+import com.aerospike.session.impl.AerospikeSessionStoreConfig;
+import com.aerospike.session.impl.SessionStoreModule;
 import com.aerospike.transcoder.TranscoderModule;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.aerospike.transcoder.fst.FstconfigModule;
@@ -30,13 +31,13 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
 /**
- * Installs all the dependent modules.
+ * AerospikePlaySessionModule installs all the dependent modules
  *
  * @author akshay
  *
  */
 @RequiredArgsConstructor
-public class AerospikePlayCacheModule extends AbstractModule {
+public class AerospikePlaySessionModule extends AbstractModule {
 
     private final Environment environment;
     @SuppressWarnings("unused")
@@ -56,12 +57,12 @@ public class AerospikePlayCacheModule extends AbstractModule {
      */
     @Override
     protected void configure() {
+        install(new SessionStoreModule());
         install(new AerospikeClientModule());
         install(new TranscoderModule());
         install(new FstconfigModule());
-        bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class).in(
-                Singleton.class);
-        bind(CacheApi.class).to(AerospikeCacheApi.class).in(Singleton.class);
+        bind(AerospikeSessionStoreConfig.class).toProvider(
+                AerospikePlayConfigReader.class).in(Singleton.class);
     }
 
 }

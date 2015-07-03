@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,8 +106,6 @@ public interface SessionStore {
     /**
      * Destroy a session identified by the sessionId.
      *
-     * @param sessionId
-     *
      * @throws SessionStoreException
      *             if session storage failed to destroy the session..
      */
@@ -116,7 +114,6 @@ public interface SessionStore {
     /**
      * Indicates if a session, identified by the sessionId, exists.
      *
-     * @param sessionId
      *
      * @throws SessionStoreException
      *             if session storage failed to read.
@@ -140,5 +137,10 @@ public interface SessionStore {
      */
     boolean exists() throws SessionStoreException;
 
+    /**
+     * Create a session if it does not exist.
+     *
+     * @throws SessionStoreException
+     */
     void create() throws SessionStoreException;
 }

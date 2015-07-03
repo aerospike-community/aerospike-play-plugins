@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class ConfigReader {
         log.debug("Reading store config from {}.", configresourcename);
         @Cleanup
         final InputStream stream = getClass().getClassLoader()
-        .getResourceAsStream(configresourcename);
+                .getResourceAsStream(configresourcename);
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Host.class, new HostDeserializer());
         mapper.registerModule(module);

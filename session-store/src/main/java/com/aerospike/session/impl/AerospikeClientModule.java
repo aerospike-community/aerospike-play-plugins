@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class AerospikeClientModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(AerospikeClient.class)
-                .annotatedWith(SessionStoreAerospikeClient.class)
-                .toProvider(AerospikeClientProvider.class).in(Singleton.class);
+        .annotatedWith(SessionStoreAerospikeClient.class)
+        .toProvider(AerospikeClientProvider.class).in(Singleton.class);
     }
 }

@@ -41,11 +41,10 @@ import java.util.Map;
  */
 public interface SessionStore {
     /**
-     * Add a key value pair associated with the session identified by sessionId.
-     * If a key value pair with the key already exists, the value will be
-     * overwritten. As a side effect marks this session as in use and reset the
-     * ttl to the session store expiry if set.
-     *
+     * Add a key value pair associated with the current session. If a key value
+     * pair with the key already exists, the value will be overwritten. As a
+     * side effect marks this session as in use and reset the ttl to the session
+     * store expiry if set.
      *
      * @param key
      *            the key
@@ -55,10 +54,10 @@ public interface SessionStore {
     void put(final String key, final Object value) throws SessionStoreException;
 
     /**
-     * Add batch of key value pairs associated with the session identified by
-     * sessionId. If a key value pair with a key already exists, the value will
-     * be overwritten. As a side effect marks this session as in use and reset
-     * the ttl to the session store expiry if set.
+     * Add batch of key value pairs associated with the current session. If a
+     * key value pair with a key already exists, the value will be overwritten.
+     * As a side effect marks this session as in use and reset the ttl to the
+     * session store expiry if set.
      *
      *
      * @param map
@@ -69,8 +68,7 @@ public interface SessionStore {
     void putAll(final Map<String, Object> map) throws SessionStoreException;
 
     /**
-     * Read the value for a key associated with a session identified by
-     * sessionId.
+     * Read the value for a key associated with current session.
      *
      * @param key
      *            the key.
@@ -83,8 +81,7 @@ public interface SessionStore {
     Object get(final String key) throws SessionNotFound, SessionStoreException;
 
     /**
-     * Read all key value pairs associated with a session identified by
-     * sessionId.
+     * Read all key value pairs associated with current session.
      *
      * @throws SessionNotFound
      *             if the session has expired or does not exist.
@@ -94,9 +91,7 @@ public interface SessionStore {
     Map<String, Object> getAll() throws SessionNotFound, SessionStoreException;
 
     /**
-     * Touch this session so that its expiry is advanced.
-     *
-     *
+     * Touch current session so that its expiry is advanced.
      *
      * @throws SessionStoreException
      *             if session storage failed to update the session expiry.
@@ -104,7 +99,7 @@ public interface SessionStore {
     void touch() throws SessionNotFound, SessionStoreException;
 
     /**
-     * Destroy a session identified by the sessionId.
+     * Destroy a current session.
      *
      * @throws SessionStoreException
      *             if session storage failed to destroy the session..
@@ -112,16 +107,8 @@ public interface SessionStore {
     void destroy() throws SessionStoreException;
 
     /**
-     * Indicates if a session, identified by the sessionId, exists.
-     *
-     *
-     * @throws SessionStoreException
-     *             if session storage failed to read.
-     */
-
-    /**
-     * Read all key value pairs associated with a session identified by
-     * sessionId, and invoke checkAndSet operation atomically
+     * Read all key value pairs associated with current session , and invoke
+     * checkAndSet operation atomically
      *
      * @param operation
      *            check and set operation
@@ -130,7 +117,7 @@ public interface SessionStore {
             throws SessionStoreException, SessionNotFound;
 
     /**
-     * Indicates if a session, identified by the sessionId, exists.
+     * Indicates if there is an active session.
      *
      * @throws SessionStoreException
      *             if session storage failed to read.

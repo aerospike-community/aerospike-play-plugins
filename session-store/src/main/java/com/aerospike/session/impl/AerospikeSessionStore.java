@@ -203,11 +203,11 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
      * @see com.aerospike.session.SessionStore#put(java.lang.String,
-     *      java.lang.String, java.lang.Object)
+     * java.lang.Object)
      */
     @Override
     public void put(final String key, final Object value)
@@ -223,11 +223,10 @@ public class AerospikeSessionStore implements SessionStore {
         client.put(writePolicy, sessionID, bin1);
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
-     * @see com.aerospike.aeroshift.session.SessionStore#putAll(java.lang.String,
-     *      java.util.Map)
+     * 
+     * @see com.aerospike.session.SessionStore#putAll(java.util.Map)
      */
     @Override
     public void putAll(final Map<String, Object> map)
@@ -248,15 +247,14 @@ public class AerospikeSessionStore implements SessionStore {
 
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.aeroshift.session.SessionStore#get(java.lang.String,
-     *      java.lang.String)
+     * @see com.aerospike.session.SessionStore#get(java.lang.String)
      */
     @Override
     public Object get(final String key) throws SessionNotFound,
-    SessionStoreException {
+            SessionStoreException {
         try {
             log.debug("Fetching given Record");
             WritePolicy writePolicy = new WritePolicy();
@@ -277,14 +275,14 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.aeroshift.session.SessionStore#getAll(java.lang.String)
+     * @see com.aerospike.session.SessionStore#getAll()
      */
     @Override
     public Map<String, Object> getAll() throws SessionNotFound,
-    SessionStoreException {
+            SessionStoreException {
         try {
             log.debug("Fetching new records");
             WritePolicy writePolicy = new WritePolicy();
@@ -319,10 +317,10 @@ public class AerospikeSessionStore implements SessionStore {
         return fetchedmap;
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.aeroshift.session.SessionStore#touch(java.lang.String)
+     * @see com.aerospike.session.SessionStore#touch()
      */
     @Override
     public void touch() throws SessionNotFound, SessionStoreException {
@@ -342,10 +340,10 @@ public class AerospikeSessionStore implements SessionStore {
         }
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.aeroshift.session.SessionStore#destroy(java.lang.String)
+     * @see com.aerospike.session.SessionStore#destroy()
      */
     @Override
     public void destroy() throws SessionStoreException {
@@ -355,10 +353,10 @@ public class AerospikeSessionStore implements SessionStore {
         client.delete(null, sessionID);
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
-     * @see com.aerospike.aeroshift.session.SessionStore#exists(java.lang.String)
+     * 
+     * @see com.aerospike.session.SessionStore#exists()
      */
     @Override
     public boolean exists() throws SessionStoreException {
@@ -370,11 +368,12 @@ public class AerospikeSessionStore implements SessionStore {
 
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.session.SessionStore#checkAndSet(java.lang.String,
-     *      com.aerospike.session.SessionOperation)
+     * @see
+     * com.aerospike.session.SessionStore#checkAndSet(com.aerospike.session.
+     * CheckAndSetOperation)
      */
     @Override
     public void checkAndSet(CheckAndSetOperation sesOp)
@@ -411,7 +410,7 @@ public class AerospikeSessionStore implements SessionStore {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.aerospike.session.SessionStore#create()
      */
     @Override

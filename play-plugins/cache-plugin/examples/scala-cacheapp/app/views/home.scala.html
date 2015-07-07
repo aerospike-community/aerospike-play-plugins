@@ -1,0 +1,30 @@
+@(ShoppingItemForm: Form[models.ShoppingItem])(implicit messages:Messages)
+
+@import helper._
+
+@main("Todo list") {
+    
+    <h2>Add a new task</h2>
+    
+    @form(routes.Application.addToCache) {
+        
+        @inputText(
+			field=ShoppingItemForm("id"),
+			args = '_label->"Please enter ID",'placeholder->"ID"
+		)
+		@inputText(
+			field=ShoppingItemForm("productname"),
+			args = '_label->"Please enter productname",'placeholder->"productname"
+		)
+		@inputText(
+			field=ShoppingItemForm("Quantity"),
+			args = '_label->"Please enter productname",'placeholder->"Quantity"
+		)       
+        <button type="submit" name="action" value="default cache">Add to cache</button>
+        <button type="submit" name="action" value="session cache">Add to session cache</button>
+    }
+    
+    <p class="button">
+    	<a href="@routes.Application.list">list</a>
+    </p>
+}

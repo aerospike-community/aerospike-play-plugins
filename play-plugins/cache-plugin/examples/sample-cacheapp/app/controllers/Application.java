@@ -17,42 +17,72 @@ package controllers;
 
 import javax.inject.Inject;
 
+import lombok.extern.slf4j.Slf4j;
 import play.cache.CacheApi;
+import play.cache.NamedCache;
 import play.data.Form;
 import play.mvc.*;
+import play.mvc.Http.Request;
 import views.html.*;
 
+@Slf4j
 public class Application extends Controller {
 
-	@Inject CacheApi cache;
-	
-	
-	
-    public Result index() {
-    	return ok(home.render(Form.form(ShoppingItem.class)));
-    }
-    public Result goHome(){
-    	cache.remove("mycart");
-    	return ok(home.render(Form.form(ShoppingItem.class)));
-    }
+	@Inject
+	CacheApi cache;
 
-    public Result addToCart(){
-    	Form <ShoppingItem> form = Form.form(ShoppingItem.class).bindFromRequest();
-		if(form.hasErrors())
-		{
-			return badRequest(home.render(form));
-		}
-		else
-		{
-			ShoppingItem data = form.get();
-			cache.set("mycart",data);
-			return ok(addnew.render(data));
-		}
-    }
-    
-    public Result list(){
-    	ShoppingItem checkcart = cache.get("mycart");
-    	return ok(list.render(checkcart));
+	@Inject
+	@NamedCache("session-cache") CacheApi sessionCache;
+
+	public Result index() {
+		return ok(home.render(Form.form(ShoppingItem.class)));
 	}
-    
+
+	public Result addToCache() {
+		String[] postAction = request().body().asFormUrlEncoded().get("action");
+		if (postAction == null || postAction.length == 0) {
+			return badRequest("You must provide a valid action");
+		} else {
+			String action = postAction[0];
+			if ("default cache".equals(action)) {
+				return addToDefaultCache();
+			} else if ("session cache".equals(action)) {
+				return addToSessionCache();
+			} else {
+				return badRequest("This action is not allowed");
+			}
+		}
+	}
+
+	public Result addToDefaultCache() {
+		Form<ShoppingItem> form = Form.form(ShoppingItem.class)
+				.bindFromRequest();
+		if (form.hasErrors()) {
+			return badRequest(home.render(form));
+		} else {
+			ShoppingItem data = form.get();
+			cache.set("key", data);
+			return redirect(routes.Application.index());
+		}
+	}
+
+	public Result addToSessionCache() {
+		Form<ShoppingItem> form = Form.form(ShoppingItem.class)
+				.bindFromRequest();
+		if (form.hasErrors()) {
+			return badRequest(home.render(form));
+		} else {
+			ShoppingItem data = form.get();
+			sessionCache.set("key", data);
+			return redirect(routes.Application.index());
+		}
+	}
+
+	public Result list() {
+		// ShoppingItem cacheCart = cache.get("key");
+		// ShoppingItem sessionCacheCart = sessionCache.get("key");
+		return ok(list.render(cache.get("key").toString(),
+				sessionCache.get("key").toString()));
+	}
+
 }

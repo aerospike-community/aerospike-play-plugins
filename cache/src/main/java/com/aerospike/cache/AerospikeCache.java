@@ -205,11 +205,16 @@ public class AerospikeCache {
     public Object get(String key) {
         Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
         Record record = client.get(null, cacheKey);
-        try {
+        if (record != null) {
             return fetch(record.getValue(config.getBin()));
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Requested item not found in cache!");
+        } else {
+            return null;
         }
+        /*
+         * try { return fetch(record.getValue(config.getBin())); } catch
+         * (NullPointerException e) { throw new
+         * RuntimeException("Requested item not found in cache!"); }
+         */
     }
 
     /**
@@ -241,7 +246,7 @@ public class AerospikeCache {
 
     /**
      * Clear the cache
-     * 
+     *
      * @param key
      */
     public void remove(String key) {

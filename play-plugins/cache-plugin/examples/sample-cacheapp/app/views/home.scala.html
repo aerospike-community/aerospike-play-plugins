@@ -1,7 +1,7 @@
 @(cartForm:Form[ShoppingItem])
 
 @main("Welcome"){
-	@helper.form(action= routes.Application.addToCart,args = 'id ->"cartForm"){
+	@helper.form(action= routes.Application.addToCache,args = 'id ->"cartForm"){
 		@helper.inputText(
 			field=cartForm("id"),
 			args = '_label->"Please enter ID",'placeholder->"ID"
@@ -14,8 +14,10 @@
 			field=cartForm("Quantity"),
 			args = '_label->"Please enter productname",'placeholder->"Quantity"
 		)
-		<p class="buttons">
-			<input type="Submit">
-		</p>
+		<button type="submit" name="action" value="default cache">Add to cache</button>
+        <button type="submit" name="action" value="session cache">Add to session cache</button>
 	}
+	<p class="button">
+    	<a href="@routes.Application.list">list</a>
+    </p>
 }

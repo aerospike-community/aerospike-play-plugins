@@ -79,10 +79,15 @@ public class Application extends Controller {
 	}
 
 	public Result list() {
-		// ShoppingItem cacheCart = cache.get("key");
-		// ShoppingItem sessionCacheCart = sessionCache.get("key");
-		return ok(list.render(cache.get("key").toString(),
-				sessionCache.get("key").toString()));
+		ShoppingItem cacheCart = new ShoppingItem();
+		ShoppingItem sessionCacheCart = new ShoppingItem();
+		if (cache.get("key")!=null){
+			cacheCart = cache.get("key");
+		}
+		if (sessionCache.get("key")!=null){
+			sessionCacheCart = sessionCache.get("key");
+		}
+		return ok(list.render(cacheCart.toString(),sessionCacheCart.toString()));
 	}
 
 }

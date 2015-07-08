@@ -29,7 +29,7 @@ import lombok.extern.java.Log
 @Singleton
 class AerospikeScalaCacheApi @Inject()(acache: AerospikeCache ,namespace: String) extends CacheApi{
    
-  def get[T:ClassTag](key: String): Option[T] = 
+  def get[T:ClassTag](key: String): Option[T] = {
      if(key.isEmpty()){
        None
      }
@@ -44,7 +44,7 @@ class AerospikeScalaCacheApi @Inject()(acache: AerospikeCache ,namespace: String
           }
         )
      }
-   
+}
   def getOrElse[A:ClassTag](key:String, expiration: Duration = Duration.Inf)(orElse: => A):A = {
       get[A](key).getOrElse{
         val value = orElse

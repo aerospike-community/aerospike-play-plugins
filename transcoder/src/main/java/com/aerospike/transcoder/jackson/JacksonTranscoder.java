@@ -88,10 +88,10 @@ public class JacksonTranscoder implements Transcoder {
 
     }
 
-    /**
+    /*
      * (non-Javadoc)
      *
-     * @see com.aerospike.aeroshift.transcoder.Transcoder#encode(java.lang.Object)
+     * @see com.aerospike.transcoder.Transcoder#encode(java.lang.Object)
      */
     @Override
     public byte[] encode(final Object value) throws TranscodeException {
@@ -103,10 +103,10 @@ public class JacksonTranscoder implements Transcoder {
         }
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
-     * @see com.aerospike.aeroshift.transcoder.Transcoder#decode(byte[])
+     * 
+     * @see com.aerospike.transcoder.Transcoder#decode(byte[])
      */
     @Override
     public Object decode(final byte[] encoded) throws TranscodeException {

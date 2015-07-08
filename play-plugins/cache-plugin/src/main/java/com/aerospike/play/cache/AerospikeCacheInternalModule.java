@@ -48,9 +48,9 @@ public class AerospikeCacheInternalModule extends AbstractModule {
         return environment.classLoader();
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
 

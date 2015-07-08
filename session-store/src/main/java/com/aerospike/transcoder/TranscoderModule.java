@@ -25,14 +25,15 @@ import com.google.inject.AbstractModule;
  *
  */
 public class TranscoderModule extends AbstractModule {
-    /**
+
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
         bind(Transcoder.class).annotatedWith(SessionStoreTranscoder.class)
-        .toProvider(TranscoderProvider.class);
+                .toProvider(TranscoderProvider.class);
     }
 }

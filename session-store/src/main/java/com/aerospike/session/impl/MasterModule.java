@@ -29,9 +29,9 @@ import com.google.inject.AbstractModule;
  */
 public class MasterModule extends AbstractModule {
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override

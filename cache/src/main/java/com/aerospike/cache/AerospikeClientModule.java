@@ -27,14 +27,14 @@ import com.google.inject.Singleton;
  *
  */
 public class AerospikeClientModule extends AbstractModule {
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
         bind(AerospikeClient.class).annotatedWith(CacheAerospikeClient.class)
-                .toProvider(AerospikeClientProvider.class).in(Singleton.class);
+        .toProvider(AerospikeClientProvider.class).in(Singleton.class);
     }
 }

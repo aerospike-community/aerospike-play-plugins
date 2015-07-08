@@ -48,7 +48,7 @@ public class FstTranscoder implements Transcoder {
 
     private final Provider<FSTConfiguration> confProvider;
 
-    /**
+    /*
      * (non-Javadoc)
      *
      * @see com.aerospike.transcoder.Transcoder#encode(java.lang.Object)
@@ -66,9 +66,9 @@ public class FstTranscoder implements Transcoder {
         return out.toByteArray();
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.aerospike.transcoder.Transcoder#decode(byte[])
      */
     @Override

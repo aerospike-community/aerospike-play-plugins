@@ -30,7 +30,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class StoreConfigProvider implements
         Provider<AerospikeSessionStoreConfig> {
-    /**
+
+    /*
      * (non-Javadoc)
      *
      * @see com.google.inject.Provider#get()

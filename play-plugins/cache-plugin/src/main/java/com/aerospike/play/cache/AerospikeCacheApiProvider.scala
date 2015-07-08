@@ -5,6 +5,9 @@ import play.api.inject.{BindingKey, Injector}
 import javax.inject.{Inject,Singleton, Provider}
 import com.aerospike.cache._
 
+/**
+ * Provider for AerospikeScalaCacheApi
+ */
 @Singleton
 class AerospikeCacheApiProvider(namespace: String) extends Provider[AerospikeScalaCacheApi] {
  	@Inject private var injector: Injector = _

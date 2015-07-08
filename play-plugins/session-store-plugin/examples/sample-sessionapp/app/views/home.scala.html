@@ -1,7 +1,7 @@
 @(cartForm:Form[ShoppingItem])
 
 @main("Welcome"){
-	@helper.form(action= routes.Application.createItem,args = 'id ->"cartForm"){
+	@helper.form(action= routes.Application.formAction,args = 'id ->"cartForm"){
 		@helper.inputText(
 			field=cartForm("id"),
 			args = '_label->"Please enter ID",'placeholder->"ID"
@@ -14,8 +14,9 @@
 			field=cartForm("Quantity"),
 			args = '_label->"Please enter Quantity",'placeholder->"Quantity"
 		)
-		<p class="buttons">
-			<input type="Submit">
-		</p>
+		<button type="submit" name="action" value="add">Add</button>
+        <button type="submit" name="action" value="delete">Delete</button>
+        <button type="submit" name="action" value="list">List</button>
+        
 	}
 }

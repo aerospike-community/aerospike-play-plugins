@@ -28,9 +28,9 @@ import com.google.inject.Singleton;
  *
  */
 public class SessionStoreModule extends AbstractModule {
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override

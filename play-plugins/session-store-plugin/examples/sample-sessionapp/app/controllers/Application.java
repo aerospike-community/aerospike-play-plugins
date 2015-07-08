@@ -38,12 +38,28 @@ public class Application extends Controller {
 	public Result index() {
     	
     	return ok(home.render(Form.form(ShoppingItem.class)));
-    }
-	
-	public Result gohome(){
-		return ok(home.render(Form.form(ShoppingItem.class)));
-	
 	}
+	
+	public Result formAction() throws SessionStoreException, SessionNotFound{
+		String[] postAction = request().body().asFormUrlEncoded().get("action");
+		if (postAction == null || postAction.length == 0) {
+			return badRequest("You must provide a valid action");
+		} else {
+			String action = postAction[0];
+			if ("add".equals(action)) {
+				return createItem();
+			} else if ("delete".equals(action)) {
+				return deleteItem();
+			} else if ("list".equals(action)){
+				return list();
+			}
+			else {
+				return badRequest("This action is not allowed");
+			}
+		}
+	}
+	
+	
 	
 	public Result createItem() throws SessionStoreException, SessionNotFound
 	{
@@ -55,11 +71,27 @@ public class Application extends Controller {
 		else
 		{
 			ShoppingItem data = form.get();
-			//store.checkAndSet(new AddToCartOperation(data));
 			store.checkAndSet(new AddNewCart(data));
 			return ok(addnew.render(data));
 		}
 	}
+	
+	public Result deleteItem() throws SessionStoreException, SessionNotFound
+	{
+		Form <ShoppingItem> form = Form.form(ShoppingItem.class).bindFromRequest();
+		if(form.hasErrors())
+		{
+			return badRequest(home.render(form));
+		}
+		else
+		{
+			ShoppingItem data = form.get();
+			store.checkAndSet(new DeleteItem(data));
+			return ok(addnew.render(data));
+		}
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public Result list() throws SessionStoreException, SessionNotFound{
 		//ShoppingCart checkcart = (ShoppingCart) store.get("shopping-cart");

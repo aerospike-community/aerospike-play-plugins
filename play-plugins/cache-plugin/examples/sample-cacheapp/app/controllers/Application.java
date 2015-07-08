@@ -17,15 +17,14 @@ package controllers;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
 import play.cache.CacheApi;
+import play.cache.Cached;
 import play.cache.NamedCache;
 import play.data.Form;
 import play.mvc.*;
-import play.mvc.Http.Request;
 import views.html.*;
 
-@Slf4j
+
 public class Application extends Controller {
 
 	@Inject
@@ -33,6 +32,7 @@ public class Application extends Controller {
 
 	@Inject
 	@NamedCache("session-cache") CacheApi sessionCache;
+
 
 	public Result index() {
 		return ok(home.render(Form.form(ShoppingItem.class)));

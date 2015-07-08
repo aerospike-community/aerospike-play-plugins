@@ -27,7 +27,7 @@ import javax.inject.Provider;
  */
 public class CacheConfigProvider implements Provider<AerospikeCacheConfig> {
 
-    /**
+    /*
      * (non-Javadoc)
      * 
      * @see javax.inject.Provider#get()

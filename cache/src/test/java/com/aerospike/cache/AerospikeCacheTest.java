@@ -24,52 +24,55 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 @Slf4j
 public class AerospikeCacheTest {
-	private Injector injector;
-	@Before
-	public void setup() throws Exception{
-		injector = Guice.createInjector(new MasterModule());
-		
-	}
-	
-	@Test
-	public void testSet() {
-		AerospikeCache acache = injector.getInstance(AerospikeCache.class);
-		log.debug("Testing set operation");
-		acache.set("name", "Jane Doe", 10);
-		Assert.assertEquals("Jane Doe", acache.get("name"));
-	}
+    private Injector injector;
 
-	@Test
-	public void testDestroy() throws InterruptedException{
-		AerospikeCache acache = injector.getInstance(AerospikeCache.class);
-		log.debug("Setting up cache");
-		acache.set("Daredevil","Matthew Murdock",100);
-		Thread.sleep(5000);
-		acache.remove("Daredevil");
-		try {
-            acache.get("Daredevil");
-            Assert.fail("Exception not thrown");
+    @Before
+    public void setup() throws Exception {
+        injector = Guice.createInjector(new MasterModule(),
+                new TranscoderSystemClassLoaderModule());
+
+    }
+
+    @Test
+    public void testSet() {
+        AerospikeCache acache = injector.getInstance(AerospikeCacheImpl.class);
+        log.debug("Testing set operation");
+        acache.set("name", "Jane Doe", 10);
+        Assert.assertEquals("Jane Doe", acache.get("name"));
+    }
+
+    @Test
+    public void testDestroy() throws InterruptedException {
+        AerospikeCache acache = injector.getInstance(AerospikeCacheImpl.class);
+        log.debug("Setting up cache");
+        acache.set("Daredevil", "Matthew Murdock", 100);
+        Thread.sleep(5000);
+        acache.remove("Daredevil");
+        try {
+            Assert.assertNull(acache.get("Daredevil"));
         } catch (Exception e) {
             System.out.println("Cached data removed successfully!!");
         }
-	}
-	
-	@Test
-	public void testGetOrElse(){
-		AerospikeCache acache = injector.getInstance(AerospikeCache.class);
-		Callable<String> callable = new Callable<String>(){
+    }
 
-			@Override
-			public String call() throws Exception {
-				return "bruceBanner";
-			}
-			
-		};
-		acache.getOrElse("Hulk", callable, 30);
-	}
+    @Test
+    public void testGetOrElse() throws Exception {
+        AerospikeCacheImpl acache = injector
+                .getInstance(AerospikeCacheImpl.class);
+        Callable<String> callable = new Callable<String>() {
+
+            @Override
+            public String call() throws Exception {
+                return "bruceBanner";
+            }
+
+        };
+        acache.getOrElse("Hulk", callable, 30);
+    }
 }

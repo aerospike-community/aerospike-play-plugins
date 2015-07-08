@@ -51,9 +51,9 @@ public class SessionIDProviderProvider implements Provider<SessionIDProvider> {
         this.classLoader = classLoader;
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
     @SuppressWarnings("unchecked")

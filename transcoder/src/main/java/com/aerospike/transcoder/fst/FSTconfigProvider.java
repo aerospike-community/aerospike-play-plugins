@@ -42,9 +42,9 @@ public class FSTconfigProvider implements Provider<FSTConfiguration> {
         this.classLoader = classLoader;
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
     @Override

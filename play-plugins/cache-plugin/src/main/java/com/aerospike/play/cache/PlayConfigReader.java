@@ -31,7 +31,7 @@ import com.aerospike.client.Host;
 
 /**
  * Read configuration from file src/main/resources/reference.conf
- * 
+ *
  * @author akshay
  *
  */
@@ -40,7 +40,7 @@ import com.aerospike.client.Host;
 public class PlayConfigReader implements Provider<AerospikeCacheConfig> {
     private final Configuration configuration;
 
-    /**
+    /*
      * (non-Javadoc)
      * 
      * @see javax.inject.Provider#get()

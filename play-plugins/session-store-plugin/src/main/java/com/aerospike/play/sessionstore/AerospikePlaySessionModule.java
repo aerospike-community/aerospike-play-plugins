@@ -50,9 +50,9 @@ public class AerospikePlaySessionModule extends AbstractModule {
         return environment.classLoader();
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override

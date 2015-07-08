@@ -25,6 +25,9 @@ import lombok.RequiredArgsConstructor
 import lombok.extern.slf4j.Slf4j
 import lombok.extern.java.Log
 
+/**
+ * CacheApi implementation using Aerospike
+ */
 @Slf4j
 @Singleton
 class AerospikeScalaCacheApi @Inject()(acache: AerospikeCache ,namespace: String) extends CacheApi{

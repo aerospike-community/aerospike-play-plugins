@@ -13,11 +13,11 @@ import com.aerospike.session.SessionStore;
 public class Global extends GlobalSettings {
     private SessionStore store;
 
-    /**
+    /*
      * (non-Javadoc)
      *
      * @see play.GlobalSettings#onRequest(play.mvc.Http.Request,
-     *      java.lang.reflect.Method)
+     * java.lang.reflect.Method)
      */
     @Override
     @SuppressWarnings("rawtypes")
@@ -34,9 +34,9 @@ public class Global extends GlobalSettings {
         };
     }
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see play.GlobalSettings#onStart(play.Application)
      */
     @Override

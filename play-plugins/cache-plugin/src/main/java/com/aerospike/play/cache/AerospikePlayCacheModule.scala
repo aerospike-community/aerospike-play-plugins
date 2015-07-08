@@ -8,6 +8,7 @@ import play.cache.{CacheApi => JavaCacheApi, DefaultCacheApi => DefaultJavaCache
 import com.aerospike.cache.AerospikeCacheConfig
 import com.aerospike.cache.AerospikeClientModule
 
+
 class JavaCacheApiProvider(bindkey: BindingKey[CacheApi]) extends Provider[JavaCacheApi] {
   @Inject private var injector: Injector = _
   lazy val get: JavaCacheApi = {
@@ -22,6 +23,9 @@ class CachedProvider(bindkey: BindingKey[CacheApi]) extends Provider[Cached]{
   }
 }
 
+/**
+ * Bind CacheApi with appropriate cache CacheApiProvider
+ */
 @Singleton
 class AerospikePlayCacheModule extends Module{
   import scala.collection.JavaConversions._

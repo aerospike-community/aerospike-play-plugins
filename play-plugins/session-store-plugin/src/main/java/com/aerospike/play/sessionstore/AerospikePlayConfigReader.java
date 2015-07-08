@@ -36,12 +36,12 @@ import com.aerospike.session.impl.AerospikeSessionStoreConfig;
  */
 @RequiredArgsConstructor(onConstructor = @_(@Inject))
 public class AerospikePlayConfigReader implements
-Provider<AerospikeSessionStoreConfig> {
+        Provider<AerospikeSessionStoreConfig> {
     private final Configuration configuration;
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
     @Override

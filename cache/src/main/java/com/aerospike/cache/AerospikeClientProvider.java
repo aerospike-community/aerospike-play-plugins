@@ -40,9 +40,9 @@ public class AerospikeClientProvider implements Provider<AerospikeClient> {
      */
     private final AerospikeCacheConfig config;
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.Provider#get()
      */
     @Override

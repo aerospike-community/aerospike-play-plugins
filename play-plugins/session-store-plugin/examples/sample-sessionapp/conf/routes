@@ -4,8 +4,9 @@
 
 # Home page
 GET 	/							controllers.Application.index()
-GET     /enter                      controllers.Application.gohome()
-GET 	/home						controllers.Application.createItem()
+POST 	/home						controllers.Application.formAction()
+GET 	/add 						controllers.Application.createItem()
+GET 	/delete						controllers.Application.deleteItem()
 GET 	/list						controllers.Application.list()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

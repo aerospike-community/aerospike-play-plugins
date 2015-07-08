@@ -28,6 +28,12 @@ import com.google.inject.Singleton;
  *
  */
 public class FstconfigModule extends AbstractModule {
+
+    /*
+     * ss(non-Javadoc)
+     *
+     * @see com.google.inject.AbstractModule#configure()
+     */
     @Override
     protected void configure() {
         bind(FSTConfiguration.class).toProvider(FSTconfigProvider.class).in(

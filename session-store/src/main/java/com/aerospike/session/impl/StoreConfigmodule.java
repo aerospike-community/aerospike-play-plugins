@@ -26,9 +26,10 @@ import com.google.inject.Singleton;
  *
  */
 public class StoreConfigmodule extends AbstractModule {
-    /**
+
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override

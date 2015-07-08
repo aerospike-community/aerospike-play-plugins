@@ -31,7 +31,8 @@ public class AddNewCart implements CheckAndSetOperation{
 		}
 		@SuppressWarnings("unchecked")
 		List<ShoppingItem> mylist = (List<ShoppingItem>) currentValues.get("shopping-list");
-		mylist.add(toAdd);
+		if (!mylist.contains(toAdd))
+			mylist.add(toAdd);
 		return currentValues;
 	}
 	

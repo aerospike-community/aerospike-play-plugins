@@ -50,12 +50,12 @@ public class TranscoderProvider implements Provider<Transcoder> {
         this.classLoader = classLoader;
     }
 
-    @SuppressWarnings("unchecked")
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.inject.Provider#get()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Transcoder get() {
         String classname = config.getTranscoderFQCN();

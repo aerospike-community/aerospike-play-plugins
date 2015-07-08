@@ -100,7 +100,7 @@ public class AerospikeSessionStore implements SessionStore {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public Object reformat(Object value, int depth) {
+    private Object reformat(Object value, int depth) {
         log.debug("Transcoder depth" + depth);
         try {
             if (value instanceof String || value instanceof Number
@@ -159,7 +159,7 @@ public class AerospikeSessionStore implements SessionStore {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public Object fetch(Object newValue) {
+    private Object fetch(Object newValue) {
         if (newValue == null) {
             return null;
         } else if (newValue instanceof String) {

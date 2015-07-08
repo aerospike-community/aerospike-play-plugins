@@ -26,15 +26,15 @@ import com.google.inject.Singleton;
  */
 public class CacheConfigModule extends AbstractModule {
 
-    /**
+    /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
         bind(AerospikeCacheConfig.class).toProvider(CacheConfigProvider.class)
-        .in(Singleton.class);
+                .in(Singleton.class);
 
     }
 

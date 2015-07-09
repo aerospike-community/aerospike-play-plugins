@@ -20,6 +20,7 @@ import play.Configuration;
 import play.Environment;
 
 import com.aerospike.cache.AerospikeCacheConfig;
+import com.aerospike.cache.AerospikeCacheModule;
 import com.aerospike.cache.AerospikeClientModule;
 import com.aerospike.transcoder.TranscoderModule;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
@@ -59,6 +60,7 @@ public class AerospikeCacheInternalModule extends AbstractModule {
         install(new AerospikeClientModule());
         install(new TranscoderModule());
         install(new FstconfigModule());
+        install(new AerospikeCacheModule());
         bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class).in(
                 Singleton.class);
     }

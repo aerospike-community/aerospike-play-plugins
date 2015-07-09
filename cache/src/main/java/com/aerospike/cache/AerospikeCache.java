@@ -41,7 +41,7 @@ public interface AerospikeCache {
      * @param key
      * @return
      */
-    <T> T get(String key);
+    Object get(String key);
 
     /**
      * Get the value if it exists from the cache, else set the value and return

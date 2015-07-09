@@ -205,14 +205,13 @@ public class AerospikeCacheImpl implements AerospikeCache {
      * 
      * @see com.aerospike.cache.AerospikeCache#get(java.lang.String)
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> T get(String key) {
+    public Object get(String key) {
         try {
             Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
             Record record = client.get(null, cacheKey);
             if (record != null) {
-                return (T) fetch(record.getValue(config.getBin()));
+                return fetch(record.getValue(config.getBin()));
             }
         } catch (Exception e) {
             log.warn("error reading cache", e);
@@ -226,16 +225,25 @@ public class AerospikeCacheImpl implements AerospikeCache {
      * @see com.aerospike.cache.AerospikeCache#getOrElse(java.lang.String,
      * java.util.concurrent.Callable, int)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getOrElse(String key, Callable<T> block, int expiration)
             throws Exception {
-        T value = get(key);
-        if (value == null) {
-            log.debug("Value not found in cache. Caching value");
-            value = block.call();
-            set(key, value, expiration);
+        Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
+        Record record = client.get(null, cacheKey);
+        if (record == null) {
+            log.debug("Value not found in cache! Caching value");
+            try {
+                set(key, block.call(), expiration);
+            } catch (Exception e1) {
+                log.warn("Could no set Cache value{}", e1);
+            }
+            record = client.get(null, cacheKey);
+            return (T) fetch(record.getValue(config.getBin()));
+        } else {
+            log.debug("Retrieving value from the cache");
+            return (T) fetch(record.getValue(config.getBin()));
         }
-        return value;
     }
 
     /*

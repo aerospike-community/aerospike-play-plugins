@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2008-2015 Aerospike, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,27 @@
 
 package com.aerospike.cache;
 
-import com.aerospike.transcoder.TranscoderModule;
-import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 
 /**
- * MasterModule installs all the dependent modules
+ * The module binds cache interface with the provider
  *
  * @author akshay
  *
  */
-public class MasterModule extends AbstractModule {
+public class AerospikeCacheModule extends AbstractModule {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
-        install(new AerospikeClientModule());
-        install(new CacheConfigModule());
-        install(new TranscoderModule());
-        install(new FstconfigModule());
-        install(new AerospikeCacheModule());
+        bind(AerospikeCache.class).to(AerospikeCacheImpl.class).in(
+                Singleton.class);
+
     }
 
 }

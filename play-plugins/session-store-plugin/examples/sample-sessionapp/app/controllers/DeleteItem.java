@@ -13,9 +13,9 @@ public class DeleteItem implements CheckAndSetOperation{
 	@Override
 	public Map<String, Object> execute(Map<String, Object> currentValues) {
 		if(!currentValues.containsKey("shopping-list")){
-			System.out.println("shopping-list not found");
 			return currentValues;
 		}
+		@SuppressWarnings("unchecked")
 		List<ShoppingItem> mylist = (List<ShoppingItem>) currentValues.get("shopping-list");
 
 		mylist.remove(toDelete);

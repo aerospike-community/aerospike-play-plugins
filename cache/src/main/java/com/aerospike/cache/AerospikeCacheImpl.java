@@ -26,15 +26,16 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
+import com.aerospike.client.policy.WritePolicy;
 import com.aerospike.transcoder.CacheTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Aerospike Implementation of Cache
@@ -60,7 +61,6 @@ public class AerospikeCacheImpl implements AerospikeCache {
     public AerospikeCacheImpl(AerospikeCacheConfig config,
             @CacheAerospikeClient AerospikeClient client,
             @CacheTranscoder Transcoder transcoder) {
-        super();
         this.config = config;
         this.client = client;
         this.transcoder = transcoder;
@@ -190,10 +190,10 @@ public class AerospikeCacheImpl implements AerospikeCache {
             Object newValue = reformat(Value, 0);
             log.debug("Storing in cache");
             Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
-            // WritePolicy writepolicy = new WritePolicy();
-            // .expiration = expiration;
+            WritePolicy writepolicy = new WritePolicy();
+            writepolicy.expiration = expiration;
             Bin bin = new Bin(config.getBin(), newValue);
-            client.put(null, cacheKey, bin);
+            client.put(writepolicy, cacheKey, bin);
         } catch (Exception e) {
             log.warn("error setting cache", e);
         }

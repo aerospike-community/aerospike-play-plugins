@@ -79,9 +79,9 @@ play.cache.aerospike{
 ```
 ### Code examples are provided in examples folder.
 
-### For java, you can use play.cache.Cache object to store value in Cache. Please refer [JavaCache](https://www.playframework.com/documentation/2.4.x/JavaCache)
+* For java, you can use play.cache.Cache object to store value in Cache. Please refer [JavaCache](https://www.playframework.com/documentation/2.4.x/JavaCache)
 
-### For Scala, you can use play.cache.Cache object to store value in Cache. Please refer [ScalaCache](https://www.playframework.com/documentation/2.4.x/ScalaCache)
+* For Scala, you can use play.cache.Cache object to store value in Cache. Please refer [ScalaCache](https://www.playframework.com/documentation/2.4.x/ScalaCache)
 
 ### Operations
 

@@ -9,7 +9,6 @@ serializer-deserailizer using this interface.
 
 This transcoder interface has two operations:
 * encode(): This operation will take an object and return a byte array representation.
-
 * decode(): This operation will take byte array and create an object from the sequence 
 of bytes.
 

@@ -1,9 +1,9 @@
 # Aerospike Plugin for Play Framework 2.4.x
 
 This plugin implements play's internal Caching interface using Aerospike. Provides Aerospike-based Cache API
-for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
-The plugin provides option for using either one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
-and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)
+for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 
+The plugin provides option to use one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
+and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) or write your own serializer
 for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
 
 ## How to install
@@ -53,11 +53,6 @@ Following is the description for configuration settings.
 * ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
 * ```play.cache.aerospike.bin`` : By default, the cache is stored in a bin called "cachebin" in Aerospike. If you want to rename the bin (in Aerospike), say, to 'mybin', add the following line to conf/application.conf[optional]
 
-```
-play.cache.aerospike{
-	bin = "mybin"
-}
-```
 
 ### Example configuration
 Add the following to your applications's conf/application.conf
@@ -77,16 +72,18 @@ play.cache.aerospike{
 			]
 	username = "Aerospike"
 	password = "password"
-	namespace = "test"
-	set = "users"
+	namespace = "cache"
+	set = "cache"
+	bin = "mybin"
 }
 ```
 
 ### Code examples are provided in examples folder.
 
-* Using default cache
+#### Java
 
-Java:
+Using default cache:
+
 ```
 package controllers;
 
@@ -100,7 +97,7 @@ public class Application extends Controller {
 	}
 ```
 
-* Using NamedCache
+Using NamedCache :
 
 ```
 package controllers;
@@ -114,10 +111,10 @@ public class Application extends Controller {
 		sessionCache.set("key", data);
 	}
 ```
+Please refer [JavaCache](https://www.playframework.com/documentation/2.4.x/JavaCache) for details.
+#### Scala
 
-Scala:
-
-* Using default cache
+Using default cache :
 
 ```
 package controllers
@@ -129,7 +126,7 @@ def index = Action {
 }
 ```
 
-* Using NamedCache
+Using NamedCache :
 
 ```
 package controllers
@@ -140,14 +137,11 @@ def index = Action {
   }
 }
 ```
-
-* For java, you can use play.cache.Cache object to store value in Cache. Please refer [JavaCache](https://www.playframework.com/documentation/2.4.x/JavaCache)
-
-* For Scala, you can use play.cache.Cache object to store value in Cache. Please refer [ScalaCache](https://www.playframework.com/documentation/2.4.x/ScalaCache)
+Please refer [ScalaCache](https://www.playframework.com/documentation/2.4.x/ScalaCache) for details.
 
 ### Operations
 
-* To store a value which never expires from Cache
+#### To store a value which never expires from Cache
 
 ```
 Cache.set(key,value)
@@ -160,12 +154,8 @@ value will expire after 100 seconds.
 ```
 Cache.set(key,value,100)
 ```
-
-Expiration values: 
-	- Greater than 0: Actual expiration of cache in seconds
-	- -1 : Never expire cache 
 	
-* To retrieve the value from the cache
+#### To retrieve the value from the cache
 
 Get the value from the key
 
@@ -173,7 +163,7 @@ Get the value from the key
 myvalue = Cache.get(key)
 ```
 
-* To retrieve a value from the cache, or set it from a default function.
+#### To retrieve a value from the cache, or set it from a default function.
 
 Retrieve a value from the cache, or set it from a default Callable function for indefinite period
 
@@ -187,7 +177,7 @@ Retrieve a value from the cache, or set it from a default Callable function for 
 Cache.getOrElse(key, Callable<T> block,20)
 ```
 
-* To remove the value from cache
+#### To remove the value from cache
 
 ```
 Cache.remove("key")

@@ -24,30 +24,22 @@ Following is the description for configuration settings.
 	
 * ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
 	 name and ports, using configuration settings. [This field is necessary]
-	
 * ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
-	  
 * ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
-
 * ```play.sessionstore.aerospike.namespace```: Specify aerospike namespace to be used.[This field is mandatory]
-
 * ```play.sessionstore.aerospike.set```: Specify aerospike set name to be used for storing session data. 
 	It is set to "test" by default.[Optional parameter]
-
 * ```play.sessionstore.aerospike.sessionIdProviderFQCN```: SessionIDProvider gives unique value to each session.
 	y default, we use DefaultSessionIDProvider to assign unique value(ID) to a session which is a random string of length 10. 
 	You can supply your own implementation for providing sessionID (sessionIDProvider) in this field or use the default SessionID provider 
 	(DefaultSessionIDProvider).[Optional parameter]
-
 * ```play.sessionstore.aerospike.sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed equals to max age.
 Expiration values:  
     - -1: Never expire session
 	- Greater than 0 : Actual expiration in seconds.
-	
     By default, it is set to 1000 seconds. [Optional parameter]
 * ```play.sessionstore.aerospike.transcoderFQCN``` : Specify the transcoder to be used for 
 	serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
-
 * ```play.sessionstore.aerospike.checkAndSetMaxTries``` : Specify number of retries when 
 	a checkAndSetOperation fails. [Optional parameter]
 

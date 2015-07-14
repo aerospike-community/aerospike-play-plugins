@@ -59,7 +59,7 @@ class AerospikeScalaCacheApi @Inject()(acache: AerospikeCache ,namespace: String
   
   def set(key: String, value: Any, expiration: Duration = Duration.Inf){
     if(!key.isEmpty()){
-      val exp = if(expiration.isFinite()) expiration.toSeconds.toInt else -1;
+      val exp = if(expiration.isFinite() && expiration.toSeconds.toInt != 0) expiration.toSeconds.toInt else -1;
       acache.set(namespace+key, value, exp)
       
     }

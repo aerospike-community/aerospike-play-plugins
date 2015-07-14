@@ -32,7 +32,6 @@ import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
-import com.aerospike.client.policy.WritePolicy;
 import com.aerospike.transcoder.CacheTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
@@ -181,7 +180,7 @@ public class AerospikeCacheImpl implements AerospikeCache {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.cache.AerospikeCache#set(java.lang.String,
      * java.lang.Object, int)
      */
@@ -191,10 +190,10 @@ public class AerospikeCacheImpl implements AerospikeCache {
             Object newValue = reformat(Value, 0);
             log.debug("Storing in cache");
             Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
-            WritePolicy writepolicy = new WritePolicy();
-            writepolicy.expiration = expiration;
+            // WritePolicy writepolicy = new WritePolicy();
+            // .expiration = expiration;
             Bin bin = new Bin(config.getBin(), newValue);
-            client.put(writepolicy, cacheKey, bin);
+            client.put(null, cacheKey, bin);
         } catch (Exception e) {
             log.warn("error setting cache", e);
         }
@@ -202,7 +201,7 @@ public class AerospikeCacheImpl implements AerospikeCache {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.cache.AerospikeCache#get(java.lang.String)
      */
     @Override
@@ -221,7 +220,7 @@ public class AerospikeCacheImpl implements AerospikeCache {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.cache.AerospikeCache#getOrElse(java.lang.String,
      * java.util.concurrent.Callable, int)
      */
@@ -248,7 +247,7 @@ public class AerospikeCacheImpl implements AerospikeCache {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.cache.AerospikeCache#remove(java.lang.String)
      */
     @Override

@@ -32,8 +32,8 @@ class AerospikePlayCacheModule extends Module{
   
   override def bindings(environment: Environment, configuration:Configuration): Seq[Binding[_]]={
     
-    val defaultCacheName = configuration.underlying.getString("play.modules.cache.defaultCache")
-    val bindCaches = configuration.underlying.getStringList("play.modules.cache.bindCaches").toSeq
+    val defaultCacheName =if (configuration.keys.contains("play.modules.cache.defaultCache")) configuration.underlying.getString("play.modules.cache.defaultCache") else "default"
+    val bindCaches = if (configuration.keys.contains("play.modules.cache.bindCaches"))  configuration.underlying.getStringList("play.modules.cache.bindCaches").toSeq else Seq() 
   
     def named(name: String): NamedCache = {
       new NamedCacheImpl(name)  

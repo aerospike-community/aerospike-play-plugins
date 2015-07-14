@@ -16,6 +16,8 @@
 
 package com.aerospike.cache;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.aerospike.cache.Image.Size;
+import com.aerospike.cache.Media.Player;
 import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -74,5 +78,39 @@ public class AerospikeCacheTest {
 
         };
         acache.getOrElse("Hulk", callable, 30);
+    }
+
+    @Test
+    public void testPerformance() throws Exception {
+        AerospikeCache cache = injector.getInstance(AerospikeCache.class);
+        List<String> persons = Arrays.asList("Bill Gates", "Steve Jobs");
+        Media media = new Media("http://javaone.com/keynote.mpg",
+                "Javaone Keynote", 640, 480, "video/mpg4", 18000000, 58982400,
+                262144, true, persons, Player.JAVA, null);
+        Image image1 = new Image("http://javaone.com/keynote_large.jpg",
+                "Javaone Keynote", 1024, 768, Size.LARGE);
+        Image image2 = new Image("http://j avaone.com/keynote_small.jpg",
+                "Javaone Keynote", 320, 240, Size.SMALL);
+        List<Image> images = Arrays.asList(image1, image2);
+
+        long putstartTimeMs = System.currentTimeMillis();
+
+        MediaContent mediaContent = new MediaContent(media, images);
+
+        for (int i = 1; i < 100001; i++) {
+            cache.set(Integer.toString(i), mediaContent, -1);
+        }
+        long putstopTimeMs = System.currentTimeMillis();
+
+        long getstartTimeMs = System.currentTimeMillis();
+        for (int j = 1; j < 100001; j++) {
+            cache.get(Integer.toString(j));
+        }
+        long getstopTimeMs = System.currentTimeMillis();
+        System.out
+        .println("PUT operation: " + (putstopTimeMs - putstartTimeMs));
+        System.out
+        .println("GET operation: " + (getstopTimeMs - getstartTimeMs));
+
     }
 }

@@ -18,7 +18,6 @@ package controllers;
 import javax.inject.Inject;
 
 import play.cache.CacheApi;
-import play.cache.Cached;
 import play.cache.NamedCache;
 import play.data.Form;
 import play.mvc.*;

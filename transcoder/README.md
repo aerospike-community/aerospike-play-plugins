@@ -89,5 +89,4 @@ public object getValue(byte[] enValue){
 }
 ```
 
-
 [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)  and [Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) are the two implementations provided by default.

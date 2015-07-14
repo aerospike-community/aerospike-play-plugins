@@ -8,7 +8,7 @@ for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder]
 
 ## How to install
 
-* Play 2.4.x: 
+### Play 2.4.x: 
 
 Add the following dependency in your application's build.sbt 
 
@@ -18,8 +18,9 @@ libraryDependencies ++= Seq (
 ) 
 
 ```
+## Configurations
 
-* The default cache module (EhCache) will be used for 
+The default cache module (EhCache) will be used for 
 non-named cache. So first we need to disable it and enable only AerospikeCacheModule to use both named and non-named
 cache. You can disable the Play's default implementation by adding following to conf/application.conf in your application
 
@@ -27,41 +28,39 @@ cache. You can disable the Play's default implementation by adding following to 
 play.modules.disabled+="play.api.cache.EhCacheModule"
 ```
 
-* For binding the defaultCache, add following in your application's conf/application.conf
+For binding the defaultCache, add following in your application's conf/application.conf
 
 ```
 play.modules.cache.defaultCache=default
 ```
-
-* Play 2.4 introduced namedcache for the first time. This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following 
+Play 2.4 introduced namedcache for the first time. This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following 
 to conf/application.conf
 
 ```
 play.modules.cache.bindCaches=["db-cache", "user-cache", "session-cache"]
 ```
 
-### Configurations
 
-* Following is the description for configuration settings.
+
+Following is the description for configuration settings.
 	
-	* ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
+* ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
 	 name and ports, using configuration settings. [This field is necessary]
-	
-	* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
-	  
-	* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
+* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
+* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
+* ```play.cache.aerospike.namespace```: Specify aerospike namespace to be used.[This field is necessary]
+* ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing session data.  [This field is necessary]
+* ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
+* ```play.cache.aerospike.bin`` : By default, the cache is stored in a bin called "cachebin" in Aerospike. If you want to rename the bin (in Aerospike), say, to 'mybin', add the following line to conf/application.conf[optional]
 
-	* ```play.cache.aerospike.namespace```: Specify aerospike namespace to be used.[This field is necessary]
+```
+play.cache.aerospike{
+	bin = "mybin"
+}
+```
 
-	* ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing session data.  [This field is necessary]
-
-	* ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for 
-	serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
-
-* Add configuration settings for Aerospike from your application's application.conf file.
-It must be provided in HOCON format[required]
-
-#### conf/application.conf
+### Example configuration
+Add the following to your applications's conf/application.conf
 
 ```
 play.cache.aerospike{
@@ -83,29 +82,6 @@ play.cache.aerospike{
 }
 ```
 
-* By default, [Fast Transcoder] is used for serializing and deserializing. User can optionally use [Jackson Transcoder] by adding follwing additional line in conf/application.conf[optional]
-
-
-#### Default-Fast Transcoder
-
-```
-transcoderFQCN = "com.aerospike.transcoder.fst.FstTranscoder"
-```
-
-#### Jackson Transcoder
-```
-play.cache.aerospike{
-transcoderFQCN = "com.aerospike.transcoder.jackson.JacksonTranscoder"
-}
-```
-
-* By default, the cache is stored in a bin called "cachebin" in Aerospike. If you want to rename the bin (in Aerospike), say, to 'mybin', add the following line to conf/application.conf[optional]
-
-```
-play.cache.aerospike{
-	bin = "mybin"
-}
-```
 ### Code examples are provided in examples folder.
 
 * Using default cache

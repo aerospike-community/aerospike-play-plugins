@@ -60,7 +60,7 @@ public class ConfigReader {
 
     /**
      * Read configuration from default file
-     * 
+     *
      * @return
      * @throws IOException
      */

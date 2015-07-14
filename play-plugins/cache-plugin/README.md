@@ -3,38 +3,67 @@
 This plugin implements play's internal Caching interface using Aerospike. Provides Aerospike-based Cache API
 for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
 The plugin provides option for using either one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
-and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) 
-for handling POJOs and complex datatypes. Please refer to this [documentation]
+and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)
+for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
 
 ## How to install
 
-* add play = 2.4.x:
-to your dependencies in your applications build.sbt file
+* Play 2.4.x: 
 
-* Play 2.4 introduced namedcache for the first time. The default cache module (EhCache) will be used for all 
-non-named cache. So first we need to disale it and enable only AerospikeCacheModule to use both named and non-named
+Add the following dependency in your application's build.sbt 
+
+```
+libraryDependencies ++= Seq (
+  "com.aerospike" % "aerospike-play-cache_2.11" % "1.0"
+) 
+
+```
+
+* The default cache module (EhCache) will be used for 
+non-named cache. So first we need to disable it and enable only AerospikeCacheModule to use both named and non-named
 cache. You can disable the Play's default implementation by adding following to conf/application.conf in your application
 
 ```
 play.modules.disabled+="play.api.cache.EhCacheModule"
 ```
 
-* This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following 
+* For binding the defaultCache, add following in your application's conf/application.conf
+
+```
+play.modules.cache.defaultCache=default
+```
+
+* Play 2.4 introduced namedcache for the first time. This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following 
 to conf/application.conf
 
 ```
-play.cache.redis.bindCaches = ["db-cache", "user-cache", "session-cache"]
+play.modules.cache.bindCaches=["db-cache", "user-cache", "session-cache"]
 ```
 
-## Configurable
+### Configurations
 
+* Following is the description for configuration settings.
+	
+	* ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
+	 name and ports, using configuration settings. [This field is necessary]
+	
+	* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
+	  
+	* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
+
+	* ```play.cache.aerospike.namespace```: Specify aerospike namespace to be used.[This field is necessary]
+
+	* ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing session data.  [This field is necessary]
+
+	* ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for 
+	serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
 
 * Add configuration settings for Aerospike from your application's application.conf file.
 It must be provided in HOCON format[required]
 
 #### conf/application.conf
 
-
+```
 play.cache.aerospike{
 
 	hosts = [
@@ -52,7 +81,7 @@ play.cache.aerospike{
 	namespace = "test"
 	set = "users"
 }
-
+```
 
 * By default, [Fast Transcoder] is used for serializing and deserializing. User can optionally use [Jackson Transcoder] by adding follwing additional line in conf/application.conf[optional]
 
@@ -79,6 +108,63 @@ play.cache.aerospike{
 ```
 ### Code examples are provided in examples folder.
 
+* Using default cache
+
+Java:
+```
+package controllers;
+
+public class Application extends Controller {
+
+	@Inject
+	CacheApi cache;
+
+	public Result index() {
+		cache.set("key", data);
+	}
+```
+
+* Using NamedCache
+
+```
+package controllers;
+
+public class Application extends Controller {
+
+	@Inject
+	@NamedCache("session-cache") CacheApi sessionCache;
+
+	public Result index() {
+		sessionCache.set("key", data);
+	}
+```
+
+Scala:
+
+* Using default cache
+
+```
+package controllers
+
+class Application @Inject() (cache: CacheApi, val messagesApi: MessagesApi) extends Controller with I18nSupport {
+def index = Action {
+    cache.set("key", data)
+  }
+}
+```
+
+* Using NamedCache
+
+```
+package controllers
+
+class Application @Inject() (cache: CacheApi, @NamedCache("session-cache") sessionCache: CacheApi, val messagesApi: MessagesApi) extends Controller with I18nSupport {
+def index = Action {
+    sessionCache.set("key", data)
+  }
+}
+```
+
 * For java, you can use play.cache.Cache object to store value in Cache. Please refer [JavaCache](https://www.playframework.com/documentation/2.4.x/JavaCache)
 
 * For Scala, you can use play.cache.Cache object to store value in Cache. Please refer [ScalaCache](https://www.playframework.com/documentation/2.4.x/ScalaCache)
@@ -93,12 +179,16 @@ Cache.set(key,value)
 
 For setting cache value which expire after sometime
 
-value will expire after 100 seconds
+value will expire after 100 seconds.
 
 ```
 Cache.set(key,value,100)
 ```
 
+Expiration values: 
+	- Greater than 0: Actual expiration of cache in seconds
+	- -1 : Never expire cache 
+	
 * To retrieve the value from the cache
 
 Get the value from the key
@@ -126,8 +216,3 @@ Cache.getOrElse(key, Callable<T> block,20)
 ```
 Cache.remove("key")
 ```
-
-
-
-
-* For using NamedCaches, please refer to sample examples in example/ folder

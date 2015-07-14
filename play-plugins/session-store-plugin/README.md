@@ -3,23 +3,17 @@
 This plugin implements a session-store for Play Framework. This enables users to store their session 
 data into Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
 The plugin provides option for using either one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
-and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) 
-for handling POJOs and complex datatypes. Please refer to this [documentation]
+and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)
+for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
 
 ## How to Install
 
-* Play 2.4.x:
-
-### Library Dependency
+### Play 2.4.x:
 
 Add the following dependency in your application's build.sbt 
 
 ```
-resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 libraryDependencies ++= Seq(
-  javaJdbc,
-  cache,
-  javaWs,
   "com.aerospike" % "aerospike-play-session-store_2.11" % "1.0"
 )
 ```
@@ -31,21 +25,23 @@ libraryDependencies ++= Seq(
 	* Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
 	 name and ports, using configuration settings ```play.sessionstore.aerospike.hosts```[This field is necessary]
 	
-	* Specify aerospike username and credentials using ```play.sessionstore.aerospike.username``` 
-	  and ```play.sessionstore.aerospike.password``` respectively.
+	* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
+	  
+	* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
 
 	* ```play.sessionstore.aerospike.namespace```: Specify aerospike namespace to be used.[This field is mandatory]
 
 	* ```play.sessionstore.aerospike.set```: Specify aerospike set name to be used for storing session data. 
 	It is set to "test" by default.[Optional parameter]
 
-	* ```play.sessionstore.aerospike.sessionIdProviderFQCN```: You can supply your own implementation 
-	for providing sessionID (sessionIDProvider) in this field or use the default SessionID provider 
+	* ```play.sessionstore.aerospike.sessionIdProviderFQCN```: SessionIDProvider gives unique value to each session.
+	y default, we use DefaultSessionIDProvider to assign unique value(ID) to a session which is a random string of length 10. 
+	You can supply your own implementation for providing sessionID (sessionIDProvider) in this field or use the default SessionID provider 
 	(DefaultSessionIDProvider).[Optional parameter]
 
 	* ```play.sessionstore.aerospike.sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed equals to max age.
 	Expiration values:  
-		- 0: Never expire session
+		- -1: Never expire session
 		- Greater than 0 : Actual expiration in seconds.
 
 	By default, it is set to 1000 seconds. [Optional parameter]
@@ -78,7 +74,7 @@ play.sessionstore.aerospike{
 	
 }
 
-### Add Global.java file, given below to your application's default package.
+* Modify your application's Global.java file as given below.
 It is used to create a session when it does not exist.
 
 ```

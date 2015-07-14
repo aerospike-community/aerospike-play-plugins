@@ -1,7 +1,10 @@
 package com.aerospike.cache;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import lombok.Cleanup;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,16 +13,16 @@ import com.aerospike.cache.Image.Size;
 import com.aerospike.cache.Media.Player;
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Bin;
+import com.aerospike.client.Host;
 import com.aerospike.client.Key;
 import com.aerospike.client.policy.ClientPolicy;
 import com.aerospike.client.policy.GenerationPolicy;
 import com.aerospike.client.policy.RecordExistsAction;
 import com.aerospike.client.policy.WritePolicy;
 import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
+import com.aerospike.transcoder.jackson.JacksonTranscoder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import lombok.Cleanup;
 
 /**
  * A test to compare cache get and put times with vanilla client.
@@ -43,8 +46,7 @@ public class AerospikeClientComparisionTest {
     public void testVanillaClient() throws Exception {
         ClientPolicy cpolicy = new ClientPolicy();
         @Cleanup
-        AerospikeClient client = new AerospikeClient(cpolicy, "127.0.0.1",
-                3000);
+        AerospikeClient client = new AerospikeClient(cpolicy, "127.0.0.1", 3000);
 
         MediaContent mediaContent = getTestObject();
 
@@ -72,7 +74,8 @@ public class AerospikeClientComparisionTest {
         System.out.println(getstopTimeMs);
 
         System.out.println("PUT operation Took "
-                + (putstopTimeMs - putstartTimeMs) + " ms\nGET operation Took: "
+                + (putstopTimeMs - putstartTimeMs)
+                + " ms\nGET operation Took: "
                 + (getstopTimeMs - getstartTimeMs) + " ms");
     }
 
@@ -97,6 +100,37 @@ public class AerospikeClientComparisionTest {
         System.out
                 .println("GET operation: " + (getstopTimeMs - getstartTimeMs));
 
+    }
+
+    @Test
+    public void testCacheWithJackson() throws IOException,
+            ClassNotFoundException {
+
+        ConfigReader configreader = new ConfigReader();
+        AerospikeCacheConfig config = configreader
+                .getConfiguration("aerospike-jacksoncache.cfg");
+        ClientPolicy cpolicy = new ClientPolicy();
+
+        AerospikeCacheImpl cache = new AerospikeCacheImpl(config,
+                new AerospikeClient(cpolicy, config.getHosts().toArray(
+                        new Host[0])),
+                        injector.getInstance(JacksonTranscoder.class));
+        MediaContent mediaContent = getTestObject();
+        long putstartTimeMs = System.currentTimeMillis();
+        for (int i = 1; i < NUM_KEYS; i++) {
+            cache.set(Integer.toString(i), mediaContent, -1);
+        }
+        long putstopTimeMs = System.currentTimeMillis();
+
+        long getstartTimeMs = System.currentTimeMillis();
+        for (int j = 1; j < NUM_KEYS; j++) {
+            cache.get(Integer.toString(j));
+        }
+        long getstopTimeMs = System.currentTimeMillis();
+        System.out
+                .println("PUT operation: " + (putstopTimeMs - putstartTimeMs));
+        System.out
+                .println("GET operation: " + (getstopTimeMs - getstartTimeMs));
     }
 
     /**

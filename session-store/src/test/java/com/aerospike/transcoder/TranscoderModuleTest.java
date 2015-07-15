@@ -24,8 +24,10 @@ import org.junit.Test;
 import com.aerospike.session.impl.AerospikeSessionStoreConfig;
 import com.aerospike.session.impl.ConfigReader;
 import com.aerospike.session.impl.MasterModule;
+import com.aerospike.session.transcoder.TranscoderProvider;
 import com.aerospike.transcoder.fst.FstTranscoder;
 import com.aerospike.transcoder.jackson.JacksonTranscoder;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -36,7 +38,7 @@ import com.google.inject.Injector;
 public class TranscoderModuleTest {
 
     /**
-     * Test method for {@link com.aerospike.transcoder.TranscoderProvider#get()}
+     * Test method for {@link com.aerospike.session.transcoder.TranscoderProvider#get()}
      */
     @Test
     public void testDefault() {
@@ -44,13 +46,14 @@ public class TranscoderModuleTest {
         AerospikeSessionStoreConfig config = injector
                 .getInstance(AerospikeSessionStoreConfig.class);
         TranscoderProvider transcoderProvider = new TranscoderProvider(config,
-                injector, getClass().getClassLoader());
+                injector,
+                ImmutableSet.<ClassLoader> of(getClass().getClassLoader()));
         transcoderProvider.get();
         Assert.assertTrue(transcoderProvider.get() instanceof FstTranscoder);
     }
 
     /**
-     * Test method for {@link com.aerospike.transcoder.TranscoderProvider#get()}
+     * Test method for {@link com.aerospike.session.transcoder.TranscoderProvider#get()}
      */
     @Test
     public void testJackson() throws IOException {
@@ -59,8 +62,10 @@ public class TranscoderModuleTest {
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_jackson.cfg");
         TranscoderProvider transcoderProvider = new TranscoderProvider(config,
-                injector, getClass().getClassLoader());
+                injector,
+                ImmutableSet.<ClassLoader> of(getClass().getClassLoader()));
         transcoderProvider.get();
-        Assert.assertTrue(transcoderProvider.get() instanceof JacksonTranscoder);
+        Assert.assertTrue(
+                transcoderProvider.get() instanceof JacksonTranscoder);
     }
 }

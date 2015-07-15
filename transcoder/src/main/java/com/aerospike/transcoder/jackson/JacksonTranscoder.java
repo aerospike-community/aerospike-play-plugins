@@ -17,17 +17,18 @@
 package com.aerospike.transcoder.jackson;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.inject.Inject;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Jackson based transcoder objects to and from json.
@@ -54,10 +55,10 @@ public class JacksonTranscoder implements Transcoder {
      */
     @Inject
     public JacksonTranscoder(ObjectMapper mapper,
-            @TranscoderClassLoader ClassLoader classLoader) {
+            @TranscoderClassLoader Set<ClassLoader> classLoaders) {
         super();
         this.mapper = mapper;
-        this.classLoader = classLoader;
+        this.classLoader = classLoaders.iterator().next();
     }
 
     /**
@@ -96,8 +97,9 @@ public class JacksonTranscoder implements Transcoder {
     @Override
     public byte[] encode(final Object value) throws TranscodeException {
         try {
-            return mapper.writeValueAsBytes(new ObjectWrapper(value.getClass()
-                    .getCanonicalName(), mapper.writeValueAsBytes(value)));
+            return mapper.writeValueAsBytes(
+                    new ObjectWrapper(value.getClass().getCanonicalName(),
+                            mapper.writeValueAsBytes(value)));
         } catch (final JsonProcessingException e) {
             throw new TranscodeException(e.getMessage(), e);
         }
@@ -105,7 +107,7 @@ public class JacksonTranscoder implements Transcoder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.transcoder.Transcoder#decode(byte[])
      */
     @Override

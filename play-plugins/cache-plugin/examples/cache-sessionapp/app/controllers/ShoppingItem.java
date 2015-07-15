@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2015 Aerospike, Inc.
+ * Copyright (C) 2015 Aeroshift Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package controllers;
 
-package com.aerospike.cache;
+import java.io.Serializable;
 
-import com.aerospike.cache.transcoder.TranscoderModule;
-import com.google.inject.AbstractModule;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- * @author akshay
- *
- */
-public class JacksonConfModule extends AbstractModule {
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.google.inject.AbstractModule#configure()
-     */
-    @Override
-    protected void configure() {
-        install(new TranscoderModule());
-
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+public class ShoppingItem implements Serializable{
+	private static final long serialVersionUID = 1L;
+	String id;
+	String productname;
+	int Quantity;
+	
+	public ShoppingItem() {
+        this.id = null;
+        this.productname = null;
+        this.Quantity = 0;
     }
-
 }

@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder;
+package com.aerospike.cache.transcoder;
 
-import com.google.inject.AbstractModule;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import com.google.inject.BindingAnnotation;
+
+@BindingAnnotation
+@Target({ FIELD, PARAMETER, METHOD })
+@Retention(RUNTIME)
 /**
- * TranscoderModule for binding Transcoder interface
+ * Binding annotation for transcoder to use in the cache.
  *
  * @author akshay
  *
  */
-public class TranscoderModule extends AbstractModule {
+public @interface CacheTranscoder {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.inject.AbstractModule#configure()
-     */
-    @Override
-    protected void configure() {
-        bind(Transcoder.class).annotatedWith(SessionStoreTranscoder.class)
-                .toProvider(TranscoderProvider.class);
-    }
 }

@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author akshay
@@ -39,7 +40,7 @@ public class JacksonTranscoderTest {
         student.setRollno("cs12b1005");
         student.setSubject("asadsfa");
         JacksonTranscoder jackson = new JacksonTranscoder(new ObjectMapper(),
-                getClass().getClassLoader());
+                ImmutableSet.<ClassLoader> of(getClass().getClassLoader()));
         byte[] barray = jackson.encode(student);
         Assert.assertEquals(student, jackson.decode(barray));
 

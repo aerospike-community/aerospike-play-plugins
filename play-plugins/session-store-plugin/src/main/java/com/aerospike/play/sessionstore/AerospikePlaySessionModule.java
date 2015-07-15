@@ -16,19 +16,19 @@
 
 package com.aerospike.play.sessionstore;
 
-import lombok.RequiredArgsConstructor;
-import play.Configuration;
-import play.Environment;
-
 import com.aerospike.session.impl.AerospikeClientModule;
 import com.aerospike.session.impl.AerospikeSessionStoreConfig;
 import com.aerospike.session.impl.SessionStoreModule;
-import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.session.transcoder.TranscoderModule;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.multibindings.Multibinder;
+
+import lombok.RequiredArgsConstructor;
+import play.Configuration;
+import play.Environment;
 
 /**
  * AerospikePlaySessionModule installs all the dependent modules
@@ -43,16 +43,9 @@ public class AerospikePlaySessionModule extends AbstractModule {
     @SuppressWarnings("unused")
     private final Configuration configuration;
 
-    @Singleton
-    @Provides
-    @TranscoderClassLoader
-    ClassLoader getClassLoader() {
-        return environment.classLoader();
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
@@ -61,8 +54,12 @@ public class AerospikePlaySessionModule extends AbstractModule {
         install(new AerospikeClientModule());
         install(new TranscoderModule());
         install(new FstconfigModule());
-        bind(AerospikeSessionStoreConfig.class).toProvider(
-                AerospikePlayConfigReader.class).in(Singleton.class);
+        bind(AerospikeSessionStoreConfig.class)
+                .toProvider(AerospikePlayConfigReader.class)
+                .in(Singleton.class);
+        Multibinder<ClassLoader> binder = Multibinder.newSetBinder(binder(),
+                ClassLoader.class, TranscoderClassLoader.class);
+        binder.addBinding().toInstance(environment.classLoader());
     }
 
 }

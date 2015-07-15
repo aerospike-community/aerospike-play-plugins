@@ -28,12 +28,12 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
+import com.aerospike.cache.transcoder.CacheTranscoder;
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.policy.WritePolicy;
-import com.aerospike.transcoder.CacheTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
 

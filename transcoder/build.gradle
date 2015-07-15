@@ -6,6 +6,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
     compile 'commons-configuration:commons-configuration:1.10'
     compile 'de.ruedigermoeller:fst:2.29'
+    compile 'com.google.inject.extensions:guice-multibindings:4.0'
+    
     
 
     // test dependencies

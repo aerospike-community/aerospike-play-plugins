@@ -16,7 +16,7 @@
 
 package com.aerospike.session.impl;
 
-import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.session.transcoder.TranscoderModule;
 import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
 import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;

@@ -16,6 +16,8 @@
 
 package com.aerospike.session.impl;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -45,15 +47,16 @@ public class SessionIDProviderProvider implements Provider<SessionIDProvider> {
      */
     @Inject
     public SessionIDProviderProvider(AerospikeSessionStoreConfig config,
-            Injector injector, @TranscoderClassLoader ClassLoader classLoader) {
+            Injector injector,
+            @TranscoderClassLoader Set<ClassLoader> classLoaders) {
         this.config = config;
         this.injector = injector;
-        this.classLoader = classLoader;
+        this.classLoader = classLoaders.iterator().next();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.inject.Provider#get()
      */
     @SuppressWarnings("unchecked")

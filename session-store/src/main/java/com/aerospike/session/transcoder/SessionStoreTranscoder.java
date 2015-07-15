@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder;
+package com.aerospike.session.transcoder;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

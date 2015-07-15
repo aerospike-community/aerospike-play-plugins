@@ -1,0 +1,26 @@
+@(cartForm:Form[ShoppingItem])
+
+@main("Welcome"){
+	@helper.form(action= routes.Application.formAction,args = 'id ->"cartForm"){
+		@helper.inputText(
+			field=cartForm("id"),
+			args = '_label->"Please enter ID",'placeholder->"ID"
+		)
+		@helper.inputText(
+			field=cartForm("productname"),
+			args = '_label->"Please enter productname",'placeholder->"produtcname"
+		)
+		@helper.inputText(
+			field=cartForm("Quantity"),
+			args = '_label->"Please enter Quantity",'placeholder->"Quantity"
+		)
+		
+<button type="submit" name="action" value="addstore">Add to sessionstore</button>
+<button type="submit" name="action" value="deletestore">Delete from sessionstore</button>
+<button type="submit" name="action" value="defaultcache">Add to cache</button>
+<button type="submit" name="action" value="mycache">Add to mycache</button>
+
+	}
+<input type="button" onclick="location.href='@routes.Application.list'" value="list" />
+	
+}

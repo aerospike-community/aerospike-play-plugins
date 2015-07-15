@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder;
+package com.aerospike.cache.transcoder;
+
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import com.aerospike.cache.AerospikeCacheConfig;
+import com.aerospike.transcoder.Transcoder;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.google.inject.Injector;
 
@@ -38,17 +41,17 @@ public class TranscoderProvider implements Provider<Transcoder> {
 
     /**
      * Create the provider.
-     * 
+     *
      * @param config
      * @param injector
      * @param classLoader
      */
     @Inject
     public TranscoderProvider(AerospikeCacheConfig config, Injector injector,
-            @TranscoderClassLoader ClassLoader classLoader) {
+            @TranscoderClassLoader Set<ClassLoader> classLoaders) {
         this.config = config;
         this.injector = injector;
-        this.classLoader = classLoader;
+        this.classLoader = classLoaders.iterator().next();
     }
 
     /*
@@ -66,8 +69,8 @@ public class TranscoderProvider implements Provider<Transcoder> {
                     .loadClass(classname);
             return injector.getInstance(transcoderClass);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unknown transcode class "
-                    + config.getTranscoderFQCN(), e);
+            throw new RuntimeException(
+                    "Unknown transcode class " + config.getTranscoderFQCN(), e);
         }
 
     }

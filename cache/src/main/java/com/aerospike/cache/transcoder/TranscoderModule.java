@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.aerospike.transcoder;
+package com.aerospike.cache.transcoder;
 
+import com.aerospike.transcoder.Transcoder;
 import com.google.inject.AbstractModule;
 
 /**

@@ -17,7 +17,7 @@
 package com.aerospike.transcoder.classloader;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
+import com.google.inject.multibindings.Multibinder;
 
 /**
  * Binding module for classloader used in transcoder.
@@ -29,15 +29,16 @@ public class TranscoderSystemClassLoaderModule extends AbstractModule {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.AbstractModule#configure()
      */
     @Override
     protected void configure() {
+        Multibinder<ClassLoader> binder = Multibinder.newSetBinder(binder(),
+                ClassLoader.class, TranscoderClassLoader.class);
+        binder.addBinding().toInstance(getClassLoader());
     }
 
-    @TranscoderClassLoader
-    @Provides
     ClassLoader getClassLoader() {
         return getClass().getClassLoader();
     }

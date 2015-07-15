@@ -16,6 +16,8 @@
 
 package com.aerospike.transcoder.fst;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -38,13 +40,14 @@ public class FSTconfigProvider implements Provider<FSTConfiguration> {
      * @param classLoader
      */
     @Inject
-    public FSTconfigProvider(@TranscoderClassLoader ClassLoader classLoader) {
-        this.classLoader = classLoader;
+    public FSTconfigProvider(
+            @TranscoderClassLoader Set<ClassLoader> classLoaders) {
+        this.classLoader = classLoaders.iterator().next();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.inject.Provider#get()
      */
     @Override

@@ -42,7 +42,7 @@ import com.aerospike.session.SessionIDProvider;
 import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStore;
 import com.aerospike.session.SessionStoreException;
-import com.aerospike.transcoder.SessionStoreTranscoder;
+import com.aerospike.session.transcoder.SessionStoreTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
 

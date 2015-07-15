@@ -16,7 +16,7 @@
 
 package com.aerospike.cache;
 
-import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.cache.transcoder.TranscoderModule;
 import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
 

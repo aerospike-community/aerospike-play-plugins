@@ -15,19 +15,19 @@
  */
 package com.aerospike.play.cache;
 
-import lombok.RequiredArgsConstructor;
-import play.Configuration;
-import play.Environment;
-
 import com.aerospike.cache.AerospikeCacheConfig;
 import com.aerospike.cache.AerospikeCacheModule;
 import com.aerospike.cache.AerospikeClientModule;
-import com.aerospike.transcoder.TranscoderModule;
+import com.aerospike.cache.transcoder.TranscoderModule;
 import com.aerospike.transcoder.classloader.TranscoderClassLoader;
 import com.aerospike.transcoder.fst.FstconfigModule;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.multibindings.Multibinder;
+
+import lombok.RequiredArgsConstructor;
+import play.Configuration;
+import play.Environment;
 
 /**
  * Installs all the dependent modules.
@@ -42,16 +42,9 @@ public class AerospikeCacheInternalModule extends AbstractModule {
     @SuppressWarnings("unused")
     private final Configuration configuration;
 
-    @Singleton
-    @Provides
-    @TranscoderClassLoader
-    ClassLoader getClassLoader() {
-        return environment.classLoader();
-    }
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.google.inject.AbstractModule#configure()
      */
 
@@ -61,7 +54,10 @@ public class AerospikeCacheInternalModule extends AbstractModule {
         install(new TranscoderModule());
         install(new FstconfigModule());
         install(new AerospikeCacheModule());
-        bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class).in(
-                Singleton.class);
+        bind(AerospikeCacheConfig.class).toProvider(PlayConfigReader.class)
+                .in(Singleton.class);
+        Multibinder<ClassLoader> binder = Multibinder.newSetBinder(binder(),
+                ClassLoader.class, TranscoderClassLoader.class);
+        binder.addBinding().toInstance(environment.classLoader());
     }
 }

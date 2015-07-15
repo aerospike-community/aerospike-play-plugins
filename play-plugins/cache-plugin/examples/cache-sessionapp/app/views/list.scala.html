@@ -1,0 +1,18 @@
+@(carts:List[ShoppingItem],defcacheItem: String, mycacheItem: String)
+SessionStore contains:
+<ul>
+ 
+@for(cart <- carts) {
+  <li>@cart</li>
+} 
+
+</ul>
+DefaultCache contains:
+<ul>
+	<li>@defcacheItem</li>
+</ul>
+MyCache contains:
+<ul>
+	<li>@mycacheItem</li>
+</ul>
+<input type="button" onclick="location.href='@routes.Application.index'" value="add/delete" />

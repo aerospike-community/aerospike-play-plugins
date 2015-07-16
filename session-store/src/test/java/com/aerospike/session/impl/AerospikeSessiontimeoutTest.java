@@ -45,7 +45,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void defaultTTLtest() throws SessionStoreException, SessionNotFound,
-    IOException, InterruptedException {
+            IOException, InterruptedException {
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_defaultTTL.cfg");
@@ -56,7 +56,7 @@ public class AerospikeSessiontimeoutTest {
                 null);
         store.put("name", "John Doe");
         store.put("roll_no", 21);
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         Assert.assertEquals("John Doe", store.get("name"));
     }
 
@@ -66,7 +66,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void smallTTLpasstest() throws SessionStoreException,
-    SessionNotFound, IOException, InterruptedException {
+            SessionNotFound, IOException, InterruptedException {
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_smallTTL.cfg");
@@ -86,7 +86,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void smallTTLfailtest() throws SessionStoreException,
-    SessionNotFound, IOException, InterruptedException {
+            SessionNotFound, IOException, InterruptedException {
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_smallTTL.cfg");
@@ -112,7 +112,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void smallTTLtestGetmethod() throws IOException,
-    InterruptedException, SessionStoreException, SessionNotFound {
+            InterruptedException, SessionStoreException, SessionNotFound {
         Injector injector = Guice.createInjector(new MasterModule());
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
@@ -143,7 +143,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void smallTTLtestGetAllmethod() throws IOException,
-    InterruptedException, SessionStoreException, SessionNotFound {
+            InterruptedException, SessionStoreException, SessionNotFound {
         Injector injector = Guice.createInjector(new MasterModule());
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
@@ -177,7 +177,7 @@ public class AerospikeSessiontimeoutTest {
      */
     @Test
     public void neverexpireTTLtest() throws SessionStoreException,
-    SessionNotFound, IOException, InterruptedException {
+            SessionNotFound, IOException, InterruptedException {
         ConfigReader configReader = new ConfigReader();
         AerospikeSessionStoreConfig config = configReader
                 .getConfiguration("aeroshift_neverexpireTTL.cfg");

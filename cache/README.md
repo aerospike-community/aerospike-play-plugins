@@ -1,6 +1,6 @@
 # Aerospike Cache
 
-This module implements Caching interface using Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 
+This module implements caching interface using Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 
 You can use either one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
 and [FasterXML-jackson databind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) or write your own serializer
 for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
@@ -37,7 +37,7 @@ libraryDependencies += "com.aerospike" % "aerospike-cache" % "0.9"
 
 ## Configurations
 
-Configuration is read from ```aerospike-cache.cfg``` in classpath.
+Configuration is read from ```aerospike-cache.cfg``` in classpath. It must be in JSON format.
 
 #### Sample Configuration
 ```
@@ -62,7 +62,7 @@ Following is the description for configuration parameters.
 * ```namespace```: Specify aerospike namespace to be used.
 * ```set```: Specify aerospike set name to be used for storing cache data.  
 * ```transcoderFQCN``` : Specify the transcoder to be used for serializing and deserializing POJOs. 
-* ```bin`` : Specify the aerospike-bin name to be used for storing cache data. If you want to rename the bin (in Aerospike),
+* ```bin``` : Specify the aerospike-bin name to be used for storing cache data. If you want to rename the bin (in Aerospike),
  say, to 'mybin', add the following line to conf/application.conf
 
 

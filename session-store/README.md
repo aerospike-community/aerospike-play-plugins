@@ -39,7 +39,7 @@ libraryDependencies += "com.aerospike" % "aerospike-session-store" % "0.9"
 
 ### Configurations
 
-Configuration is read from ```aerospike-session-store.cfg``` in classpath.
+Configuration is read from ```aerospike-session-store.cfg``` in classpath. It must be in JSON format.
 
 #### Sample configuration
 
@@ -66,10 +66,10 @@ Following is the description for configuration parameters.
 * ```set```: Specify aerospike set name to be used for storing session data. 
 * ```sessionIdProviderFQCN```: SessionIDProvider gives unique value to each session.
 	You can supply your own implementation for providing sessionID (sessionIDProvider) in this field.
-* ```sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed equals to max age.
-Expiration values:  
-    - -1: Never expire session
-	- Greater than 0 : Actual expiration in seconds.
+* ```sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed 
+equals to max age.Default is set to 1 second.
+	- -1: Never expire session
+	- Greater than 0 : Actual expiration in seconds. 
    
 * ```transcoderFQCN``` : Specify the transcoder to be used for 
 	serializing and deserializing POJOs.
@@ -77,7 +77,7 @@ Expiration values:
 	a checkAndSetOperation fails. 
 
 ### Operations:
-Using any operation will mark the current session is in use and reset its expiration value to the given maximum session age.
+Using any operation will mark the current session is in use and advances the session expiration by sessionMaxAge.
 
 * void create():
 	Create a session if it does not exists. 

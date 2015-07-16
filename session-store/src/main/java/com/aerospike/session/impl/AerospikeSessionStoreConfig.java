@@ -98,7 +98,16 @@ public class AerospikeSessionStoreConfig {
 
     @SuppressWarnings("unused")
     private AerospikeSessionStoreConfig() {
-        this(null, null, null, null, null, 0, FstTranscoder.class
+        this(null, null, null, null, null, 1, FstTranscoder.class
                 .getCanonicalName(), null, 4);
+    }
+
+    /**
+     * @return session max age.
+     */
+    public int getSessionMaxAge() {
+        // zero means server default in aerospike. change it to 1 which is the
+        // least value we can set.
+        return sessionMaxAge != 0 ? sessionMaxAge : 1;
     }
 }

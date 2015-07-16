@@ -1,4 +1,4 @@
-# Aerospike Plugin for Play Framework 2.4.x
+# Aerospike Cache Plugin for Play Framework 2.4.x
 
 This plugin implements play's internal Caching interface using Aerospike. Provides Aerospike-based Cache API
 for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 

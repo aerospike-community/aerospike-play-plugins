@@ -1,4 +1,4 @@
-# Aerospike Session Store plugin for Play Framework 2.4.x
+# Aerospike Session Store Plugin for Play Framework 2.4.x
 
 This plugin implements a session-store for Play Framework. This enables users to store their session 
 data into Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
@@ -118,7 +118,7 @@ public class Global extends GlobalSettings {
 ```
 
 ### Operations:
-Using any operation will mark the current session is in use and reset its expiration value to the given maximum session age.
+Using any operation will mark the current session is in use and advances the session expiration by sessionMaxAge.
 
 * void create():
 	Create a session if it does not exists. 

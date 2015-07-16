@@ -27,37 +27,40 @@ import java.util.concurrent.Callable;
 public interface AerospikeCache {
 
     /**
-     * Set up the cache value
+     * For the given key, set up the value in cache
      *
      * @param key
      * @param Value
      * @param expiration
+     *            any non-zero value in seconds. Use -1 for infinity.
+     *
      */
     void set(String key, Object Value, int expiration);
 
     /**
-     * Get the value from the cache
+     * Get the value from the cache for given key.
      *
      * @param key
-     * @return
+     * @return value if found, else null.
      */
     Object get(String key);
 
     /**
-     * Get the value if it exists from the cache, else set the value and return
+     * Get the value for given key if it exists from the cache, else invoke the
+     * callable set the result in cache and return the value.
      *
      * @param key
-     * @param block
+     * @param callable
      * @param expiration
      * @return
      * @throws Exception
      *             only if the callable failed.
      */
-    <T> T getOrElse(String key, Callable<T> block, int expiration)
+    <T> T getOrElse(String key, Callable<T> callable, int expiration)
             throws Exception;
 
     /**
-     * Clear the cache
+     * Remove the key-value from the cache
      *
      * @param key
      */

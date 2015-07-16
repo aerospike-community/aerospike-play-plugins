@@ -49,7 +49,7 @@ Following is the description for configuration settings.
 * ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
 * ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
 * ```play.cache.aerospike.namespace```: Specify aerospike namespace to be used.[This field is necessary]
-* ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing session data.  [This field is necessary]
+* ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing cache data.  [This field is necessary]
 * ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
 * ```play.cache.aerospike.bin`` : By default, the cache is stored in a bin called "cachebin" in Aerospike. If you want to rename the bin (in Aerospike), say, to 'mybin', add the following line to conf/application.conf[optional]
 

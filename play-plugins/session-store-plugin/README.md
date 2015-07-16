@@ -22,10 +22,10 @@ libraryDependencies ++= Seq(
 
 Following is the description for configuration settings.
 	
-* ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
+* ```play.sessionstore.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
 	 name and ports, using configuration settings. [This field is necessary]
-* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
-* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
+* ```play.sessionstore.aerospike.username```: Specify aerospike username. [This field is necessary]
+* ```play.sessionstore.aerospike.password```: Specify your aerospike password. [This field is necessary]
 * ```play.sessionstore.aerospike.namespace```: Specify aerospike namespace to be used.[This field is mandatory]
 * ```play.sessionstore.aerospike.set```: Specify aerospike set name to be used for storing session data. 
 	It is set to "test" by default.[Optional parameter]

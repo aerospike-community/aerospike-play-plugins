@@ -108,7 +108,7 @@ public interface SessionStore {
 
     /**
      * Read all key value pairs associated with current session , and invoke
-     * checkAndSetOperation atomically
+     * checkAndSetOperation atomically.
      *
      * @param operation
      *            check and set operation

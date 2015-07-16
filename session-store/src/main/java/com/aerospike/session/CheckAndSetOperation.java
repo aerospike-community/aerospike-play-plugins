@@ -19,12 +19,23 @@ package com.aerospike.session;
 import java.util.Map;
 
 /**
- * An operation interface for providing atomic Read and Write operation. whose
- * implementaion must be provided by users
+ * An operation interface for providing atomic Read and Write operation.
  *
  * @author akshay
  *
  */
 public interface CheckAndSetOperation {
+    /**
+     * Invoked with values in session store for current session. The resulting
+     * map of execute method will be replace current values in session-store.
+     *
+     * <p>
+     * This method should be idempotent because this could be invoked multiple
+     * times for the same operation.
+     * </p>
+     *
+     * @param curValues
+     * @return
+     */
     Map<String, Object> execute(Map<String, Object> curValues);
 }

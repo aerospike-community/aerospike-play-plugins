@@ -230,15 +230,16 @@ public class AerospikeCacheImpl implements AerospikeCache {
             throws Exception {
         Key cacheKey = new Key(config.getNamespace(), config.getSet(), key);
         Record record = client.get(null, cacheKey);
+
         if (record == null) {
+            T returnValue = block.call();
             log.debug("Value not found in cache! Caching value");
             try {
-                set(key, block.call(), expiration);
+                set(key, returnValue, expiration);
             } catch (Exception e1) {
                 log.warn("Could no set Cache value{}", e1);
             }
-            record = client.get(null, cacheKey);
-            return (T) fetch(record.getValue(config.getBin()));
+            return returnValue;
         } else {
             log.debug("Retrieving value from the cache");
             return (T) fetch(record.getValue(config.getBin()));

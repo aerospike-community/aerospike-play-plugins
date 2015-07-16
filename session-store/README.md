@@ -1,9 +1,9 @@
-# Aerospike Session Store plugin
+# Aerospike Session Store
 
-This plugin implements a session-store for using Aerospike as a backing store. This enables users to store their session 
+This module implements a session-store for using Aerospike as a backing store. This enables users to store their session 
 data into Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
 You can use either one of two Transcoders, [Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
-and [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)
+and [FasterXML-jackson databind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)
 for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
 
 ### Installation:
@@ -39,30 +39,9 @@ libraryDependencies += "com.aerospike" % "aerospike-session-store" % "0.9"
 
 ### Configurations
 
-Following is the description for configuration settings.
-	
-* ```hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
-	 name and ports, using configuration settings. 
-* ```username```: Specify aerospike username. 
-* ```password```: Specify your aerospike password. 
-* ```namespace```: Specify aerospike namespace to be used.
-* ```set```: Specify aerospike set name to be used for storing session data. 
-* ```sessionIdProviderFQCN```: SessionIDProvider gives unique value to each session.
-	You can supply your own implementation for providing sessionID (sessionIDProvider) in this field.
-* ```sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed equals to max age.
-Expiration values:  
-    - -1: Never expire session
-	- Greater than 0 : Actual expiration in seconds.
-    
-* ```transcoderFQCN``` : Specify the transcoder to be used for 
-	serializing and deserializing POJOs.
-* ```checkAndSetMaxTries``` : Specify number of retries when 
-	a checkAndSetOperation fails. 
+Configuration is read from ```aerospike-session-store.cfg``` in classpath.
 
-You can specify the name of configuration file to be used using configReader's getConfiguration method. 
-By default, configuration is read from /aerospike-session-store/src/test/resources/aerospike-session-store.cfg.
-
-### Example configuration
+#### Sample configuration
 
 ```
 {
@@ -76,6 +55,26 @@ By default, configuration is read from /aerospike-session-store/src/test/resourc
   "checkAndSetMaxTries":"5"
  }
 ```
+
+Following is the description for configuration parameters.
+	
+* ```hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
+	 name and ports, using configuration settings. 
+* ```username```: Specify aerospike username. 
+* ```password```: Specify your aerospike password. 
+* ```namespace```: Specify aerospike namespace to be used.
+* ```set```: Specify aerospike set name to be used for storing session data. 
+* ```sessionIdProviderFQCN```: SessionIDProvider gives unique value to each session.
+	You can supply your own implementation for providing sessionID (sessionIDProvider) in this field.
+* ```sessionMaxAge``` : Specify the maximum session age until it expires(in seconds). A session expires if time elapsed equals to max age.
+Expiration values:  
+    - -1: Never expire session
+	- Greater than 0 : Actual expiration in seconds.
+   
+* ```transcoderFQCN``` : Specify the transcoder to be used for 
+	serializing and deserializing POJOs.
+* ```checkAndSetMaxTries``` : Specify number of retries when 
+	a checkAndSetOperation fails. 
 
 ### Operations:
 Using any operation will mark the current session is in use and reset its expiration value to the given maximum session age.

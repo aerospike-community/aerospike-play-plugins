@@ -1,5 +1,4 @@
-apply from: "config/common.build.gradle"
-
+project.ext['projectDescription'] = 'Common transcoder interface for aerospike java object serialization.'
 
 dependencies {
     // compile dependencies
@@ -7,9 +6,4 @@ dependencies {
     compile 'commons-configuration:commons-configuration:1.10'
     compile 'de.ruedigermoeller:fst:2.29'
     compile 'com.google.inject.extensions:guice-multibindings:4.0'
-    
-    
-
-    // test dependencies
-    testCompile group: 'junit', name: 'junit', version: '4.+'
 }

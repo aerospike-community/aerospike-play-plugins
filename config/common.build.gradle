@@ -1,24 +1,13 @@
-
 // plugins used across the board
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
-apply plugin: "jacoco"
+apply plugin: 'jacoco'
+apply plugin: 'signing'
 
-
-// set the group
-group = "com.aerospike"
-version = '0.9-SNAPSHOT'
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
+group = 'com.aerospike'
 
 // java configuration
 targetCompatibility = 1.7
@@ -71,7 +60,7 @@ dependencies {
     compileOnly group: "org.projectlombok", name: "lombok", version: "latest.release"
 
     // test dependencies
-    testCompile 'junit:junit:4.+'
+    testCompile 'junit:junit:4.12'
     testCompile 'com.google.guiceberry:guiceberry:latest.release'
 
     // logging
@@ -139,4 +128,61 @@ tasks.withType(FindBugs) {
 // publish to OSSRH
 artifacts { archives javadocJar, sourcesJar }
 
+signing {
+    sign configurations.archives
+}
 
+install {
+    repositories.mavenInstaller {
+        pom.groupId = 'com.aerospike'
+    }
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      pom.groupId = "com.aerospike"
+      
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+      
+	   
+      pom.project {
+        name project.ext['projectName']
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description project.ext['projectDescription']
+        url project.ext['projectWebHome']
+
+        scm {
+          connection 'scm:git:' + project.ext['projectGitHome'] + '.git'
+          developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
+          url project.ext['projectGitHome']
+        }
+        
+        developers {
+          developer {
+            id 'Aerospike'
+            name 'Aerospike, Inc.'
+            email 'ashish@aerospike.com'
+          }
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+       
+      }
+    }
+  }
+}

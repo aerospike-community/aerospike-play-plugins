@@ -78,7 +78,8 @@ play.cache.aerospike{
 }
 ```
 
-### Code examples are provided in examples folder.
+### Examples
+Example play applications using the plugin can be found in the [examples folder](examples).
 
 #### Java
 

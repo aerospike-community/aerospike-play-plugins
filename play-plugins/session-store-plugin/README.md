@@ -144,7 +144,7 @@ Using any operation will mark the current session is in use and advances the ses
 	This operation allows to read all key-value pairs associated with the current session 
 	and invoke checkAndSetOperation atomically. checkAndSetOperation is an interface which 
 	allows user to plug-in his own atomic read and write operation. Please refer 
-	(AddNewCart)[examples/sample-sessionapp/app/controllers/AddNewCart.java] and (DeleteItem)[examples/sample-sessionapp/app/controllers/DeleteItem.java] classes in example sample-sessionapp which are
+	[AddNewCart](examples/sample-sessionapp/app/controllers/AddNewCart.java) and [DeleteItem](examples/sample-sessionapp/app/controllers/DeleteItem.java) classes in example sample-sessionapp which are
 	are implementation of CheckAndSetOperation. The operation fails after checkAndSetMaxTries failed attempts to update atomically.
 
 ## Examples

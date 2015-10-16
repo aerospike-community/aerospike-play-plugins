@@ -15,7 +15,8 @@ Add the following dependency in your application's build.sbt
 ```
 libraryDependencies ++= Seq (
   "com.aerospike" % "aerospike-play-cache_2.11" % "1.0"
-) 
+)
+```  
 
 ### Play >= 2.4.3
 

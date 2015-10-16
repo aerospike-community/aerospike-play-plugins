@@ -1,4 +1,4 @@
-# aerospike-java-plugins
+# Aerospike Java Plugins
 
 Java based plugins for common aerospike use cases.
  - cache - use aerospike as your high performance cache. Load and store native java objects directly from your application.

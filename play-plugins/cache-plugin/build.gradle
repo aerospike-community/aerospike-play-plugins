@@ -1,0 +1,16 @@
+apply from: "config/play.common.build.gradle"
+
+project.ext['projectDescription'] = "Play plugin use Aerospike as a cache. Implements Play's Cache API."
+
+dependencies {
+   // common dependencies
+   play "com.typesafe.play:play-cache_2.11:2.4.3"
+   play "org.apache.commons:commons-lang3:3.0.1"
+   play "org.projectlombok:lombok:1.16.4"
+
+   // aeropsike dependencies
+   play project(":aerospike-cache")
+}
+
+
+

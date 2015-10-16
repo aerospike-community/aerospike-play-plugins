@@ -28,6 +28,12 @@ import com.google.inject.Injector;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Test for {@link AerospikeCache}.
+ * 
+ * @author ashish
+ *
+ */
 @Slf4j
 public class AerospikeCacheTest {
     private Injector injector;

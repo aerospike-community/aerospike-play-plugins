@@ -1,11 +1,36 @@
+/*
+ * Copyright 2008-2015 Aerospike, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.aerospike.cache;
-
-import static com.aerospike.cache.ReprUtil.repr;
 
 import java.util.List;
 
+/**
+ * Test benchmarking object.
+ *
+ * @author ashish
+ *
+ */
 @SuppressWarnings("serial")
 public class Media implements java.io.Serializable {
+    /**
+     * Player types.
+     * 
+     * @author ashish
+     *
+     */
     public enum Player {
         JAVA, FLASH;
 
@@ -50,10 +75,9 @@ public class Media implements java.io.Serializable {
     public Media() {
     }
 
-    public Media(String uri, String title, int width, int height,
-            String format, long duration, long size, int bitrate,
-            boolean hasBitrate, List<String> persons, Player player,
-            String copyright) {
+    public Media(String uri, String title, int width, int height, String format,
+            long duration, long size, int bitrate, boolean hasBitrate,
+            List<String> persons, Player player, String copyright) {
         this.uri = uri;
         this.title = title;
         this.width = width;
@@ -137,26 +161,6 @@ public class Media implements java.io.Serializable {
         result = 31 * result + (player != null ? player.hashCode() : 0);
         result = 31 * result + (copyright != null ? copyright.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[Media ");
-        sb.append("uri=").append(repr(uri));
-        sb.append(", title=").append(repr(title));
-        sb.append(", width=").append(width);
-        sb.append(", height=").append(height);
-        sb.append(", format=").append(repr(format));
-        sb.append(", duration=").append(duration);
-        sb.append(", size=").append(size);
-        sb.append(", hasBitrate=").append(hasBitrate);
-        sb.append(", bitrate=").append(String.valueOf(bitrate));
-        sb.append(", persons=").append(repr(persons));
-        sb.append(", player=").append(player);
-        sb.append(", copyright=").append(repr(copyright));
-        sb.append("]");
-        return sb.toString();
     }
 
     public void setUri(String uri) {

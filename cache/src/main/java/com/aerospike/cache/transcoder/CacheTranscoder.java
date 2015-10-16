@@ -26,15 +26,15 @@ import java.lang.annotation.Target;
 
 import com.google.inject.BindingAnnotation;
 
-@BindingAnnotation
-@Target({ FIELD, PARAMETER, METHOD })
-@Retention(RUNTIME)
 /**
  * Binding annotation for transcoder to use in the cache.
  *
  * @author akshay
  *
  */
+@BindingAnnotation
+@Target({ FIELD, PARAMETER, METHOD })
+@Retention(RUNTIME)
 public @interface CacheTranscoder {
 
 }

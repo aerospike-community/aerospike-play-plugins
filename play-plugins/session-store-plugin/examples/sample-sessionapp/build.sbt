@@ -6,11 +6,13 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.11.6"
 
+resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
+
 libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  "com.aerospike" % "aerospike-play-session-store_2.11" % "1.0",
+  "com.aerospike" % "aerospike-play-session-store_2.11" % "1.1",
   "org.projectlombok" % "lombok" % "1.16.4"
 )
 

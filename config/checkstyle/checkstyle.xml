@@ -11,10 +11,10 @@
 
 	<module name="RegexpSingleline">
 		<property name="format"
-			value="^(//| \*) Copyright (\([cC]\) )?[\d]{4}(\-[\d]{4})? Aeroshift Authors.*$" />
+			value="^(//| \*) Copyright (\([cC]\) )?[\d]{4}(\-[\d]{4})? Aerospike, Inc.*$" />
 		<property name="minimum" value="1" />
 		<property name="maximum" value="10" />
-		<property name="message" value="Aeroshift inject copyright is missing or malformed." />
+		<property name="message" value="Aerospike copyright is missing or malformed." />
 		<property name="severity" value="error" />
 	</module>
 

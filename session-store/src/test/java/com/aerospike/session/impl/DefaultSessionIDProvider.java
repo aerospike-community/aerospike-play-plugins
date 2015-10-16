@@ -17,8 +17,17 @@ package com.aerospike.session.impl;
 
 import java.util.Random;
 
+import javax.inject.Singleton;
+
 import com.aerospike.session.SessionIDProvider;
 
+/**
+ * Session Id provider for testing. Generates a random session id.
+ *
+ * @author ashish
+ *
+ */
+@Singleton
 public class DefaultSessionIDProvider implements SessionIDProvider {
     private String sessionid;
 
@@ -32,6 +41,7 @@ public class DefaultSessionIDProvider implements SessionIDProvider {
             randomInt = randomGenerator.nextInt(CHAR_LIST.length());
             random_str.append(CHAR_LIST.charAt(randomInt));
         }
+        sessionid = random_str.toString();
     }
 
     @Override

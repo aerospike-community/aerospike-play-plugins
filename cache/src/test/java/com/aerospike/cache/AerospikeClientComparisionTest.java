@@ -1,10 +1,23 @@
+/*
+ * Copyright 2008-2015 Aerospike, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.aerospike.cache;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import lombok.Cleanup;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +36,8 @@ import com.aerospike.transcoder.classloader.TranscoderSystemClassLoaderModule;
 import com.aerospike.transcoder.jackson.JacksonTranscoder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import lombok.Cleanup;
 
 /**
  * A test to compare cache get and put times with vanilla client.
@@ -46,14 +61,15 @@ public class AerospikeClientComparisionTest {
     public void testVanillaClient() throws Exception {
         ClientPolicy cpolicy = new ClientPolicy();
         @Cleanup
-        AerospikeClient client = new AerospikeClient(cpolicy, "127.0.0.1", 3000);
+        AerospikeClient client = new AerospikeClient(cpolicy, "127.0.0.1",
+                3000);
 
         MediaContent mediaContent = getTestObject();
 
         long putstartTimeMs = System.currentTimeMillis();
         System.out.println("startTimeput:" + putstartTimeMs);
         WritePolicy wPolicy = new WritePolicy();
-        wPolicy.generationPolicy = GenerationPolicy.EXPECT_GEN_EQUAL;
+        wPolicy.generationPolicy = GenerationPolicy.NONE;
         wPolicy.recordExistsAction = RecordExistsAction.REPLACE;
 
         for (int i = 1; i < NUM_KEYS; i++) {
@@ -74,8 +90,7 @@ public class AerospikeClientComparisionTest {
         System.out.println(getstopTimeMs);
 
         System.out.println("PUT operation Took "
-                + (putstopTimeMs - putstartTimeMs)
-                + " ms\nGET operation Took: "
+                + (putstopTimeMs - putstartTimeMs) + " ms\nGET operation Took: "
                 + (getstopTimeMs - getstartTimeMs) + " ms");
     }
 
@@ -103,8 +118,8 @@ public class AerospikeClientComparisionTest {
     }
 
     @Test
-    public void testCacheWithJackson() throws IOException,
-            ClassNotFoundException {
+    public void testCacheWithJackson()
+            throws IOException, ClassNotFoundException {
 
         ConfigReader configreader = new ConfigReader();
         AerospikeCacheConfig config = configreader
@@ -112,9 +127,9 @@ public class AerospikeClientComparisionTest {
         ClientPolicy cpolicy = new ClientPolicy();
 
         AerospikeCacheImpl cache = new AerospikeCacheImpl(config,
-                new AerospikeClient(cpolicy, config.getHosts().toArray(
-                        new Host[0])),
-                        injector.getInstance(JacksonTranscoder.class));
+                new AerospikeClient(cpolicy,
+                        config.getHosts().toArray(new Host[0])),
+                injector.getInstance(JacksonTranscoder.class));
         MediaContent mediaContent = getTestObject();
         long putstartTimeMs = System.currentTimeMillis();
         for (int i = 1; i < NUM_KEYS; i++) {

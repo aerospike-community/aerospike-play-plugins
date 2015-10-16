@@ -8,13 +8,24 @@ for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder]
 
 ## How to install
 
-### Play 2.4.x: 
+### Play < 2.4.3: 
 
 Add the following dependency in your application's build.sbt 
 
 ```
 libraryDependencies ++= Seq (
   "com.aerospike" % "aerospike-play-cache_2.11" % "1.0"
+) 
+
+### Play >= 2.4.3
+
+Requires Java 8 JDK.
+
+Add the following dependency in your application's build.sbt 
+
+```
+libraryDependencies ++= Seq (
+  "com.aerospike" % "aerospike-play-cache_2.11" % "1.1"
 ) 
 
 ```

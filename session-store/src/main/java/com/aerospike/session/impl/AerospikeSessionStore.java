@@ -25,8 +25,6 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Bin;
@@ -45,6 +43,8 @@ import com.aerospike.session.SessionStoreException;
 import com.aerospike.session.transcoder.SessionStoreTranscoder;
 import com.aerospike.transcoder.TranscodeException;
 import com.aerospike.transcoder.Transcoder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Aerospike implementation of {@link SessionStore}. This implementation on
@@ -225,7 +225,7 @@ public class AerospikeSessionStore implements SessionStore {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.session.SessionStore#putAll(java.util.Map)
      */
     @Override
@@ -253,8 +253,8 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.session.SessionStore#get(java.lang.String)
      */
     @Override
-    public Object get(final String key) throws SessionNotFound,
-            SessionStoreException {
+    public Object get(final String key)
+            throws SessionNotFound, SessionStoreException {
         try {
             log.debug("Fetching given Record");
             WritePolicy writePolicy = new WritePolicy();
@@ -281,8 +281,8 @@ public class AerospikeSessionStore implements SessionStore {
      * @see com.aerospike.session.SessionStore#getAll()
      */
     @Override
-    public Map<String, Object> getAll() throws SessionNotFound,
-            SessionStoreException {
+    public Map<String, Object> getAll()
+            throws SessionNotFound, SessionStoreException {
         try {
             log.debug("Fetching new records");
             WritePolicy writePolicy = new WritePolicy();
@@ -355,7 +355,7 @@ public class AerospikeSessionStore implements SessionStore {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.session.SessionStore#exists()
      */
     @Override
@@ -384,17 +384,19 @@ public class AerospikeSessionStore implements SessionStore {
                 sessionIDProvider.get());
         for (int i = 0; i < config.getCheckAndSetMaxTries(); i++) {
             Record record = client.get(null, sessionID);
-            Map<String, Object> curBins = recordToMap(record);
+            Map<String, Object> curBins = record != null ? recordToMap(record)
+                    : new HashMap<>();
             Map<String, Object> newBins = sesOp.execute(curBins);
             WritePolicy writepolicy = new WritePolicy();
             writepolicy.expiration = config.getSessionMaxAge();
             writepolicy.recordExistsAction = RecordExistsAction.UPDATE;
             writepolicy.generationPolicy = GenerationPolicy.EXPECT_GEN_EQUAL;
             writepolicy.generation = record != null ? record.generation : 0;
-            log.debug("{} {}", record, writepolicy.generation);
+
             ArrayList<Bin> binList = new ArrayList<Bin>();
             for (Entry<String, Object> entry : newBins.entrySet()) {
-                Bin bin = new Bin(entry.getKey(), reformat(entry.getValue(), 0));
+                Bin bin = new Bin(entry.getKey(),
+                        reformat(entry.getValue(), 0));
                 binList.add(bin);
             }
             Bin[] bins = binList.toArray(new Bin[binList.size()]);
@@ -410,7 +412,7 @@ public class AerospikeSessionStore implements SessionStore {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.aerospike.session.SessionStore#create()
      */
     @Override

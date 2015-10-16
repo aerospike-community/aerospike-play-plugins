@@ -8,12 +8,14 @@ for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder]
 
 ### Installation:
 
+Requires Java 8 JDK. Use 0.9.1 version for Java 7 JDK.
+
 Gradle:
 
 In your gradle project, add following to your dependencies:
 
 ```
-compile 'com.aerospike:aerospike-session-store:O.9'
+compile 'com.aerospike:aerospike-session-store:1.1'
 ```
 Maven : 
 
@@ -23,14 +25,14 @@ In your maven project, add the following dependency:
 	<dependency>
 		<groupId>com.aerospike</groupId>
 		<artifactId>aerospike-session-store</artifactId>
-		<version>0.9</version>
+		<version>1.1</version>
 	</dependency>
 
 ```
 
-SBT Project :
+Play framework :
 
-In your Play project, add the following dependency
+Consider using the (session store plugin)[play-plugins/session-store-plugin] for play projects.
 
 ```
 libraryDependencies += "com.aerospike" % "aerospike-session-store" % "0.9"
@@ -46,7 +48,7 @@ Configuration is read from ```aerospike-session-store.cfg``` in classpath. It mu
 ```
 {
   "hosts"	:[{"name":"127.0.0.1","port":3000}],
-  "username" : "Akshay",
+  "username" : "akshay",
   "password" : "none",
   "namespace": "test",
   "set":"users",
@@ -103,3 +105,17 @@ Using any operation will mark the current session is in use and advances the ses
 	allows user to plug-in his own atomic read and write operation. Please refer 
 	AddNewCartItem and DeleteItem classes in example sample-sessionapp which are
 	are implementation of CheckAndSetOperation. 
+
+### Important gradle tasks
+
+Publishing the artifact to local maven repository.
+
+```
+gradle release publishToMavenLocal
+```
+
+Build and run tests
+
+```
+gradle build
+```

@@ -15,12 +15,14 @@ subprojects {
     
     gradle.taskGraph.whenReady {taskGraph ->
         if (taskGraph.hasTask(release)) {
-            version = '0.9.1'
+            version = '1.1'
         } else {
-            version = '0.9.1-SNAPSHOT'
+            version = '1.1-SNAPSHOT'
         }
     }
-    
-    apply from: "config/common.build.gradle"
+
+    if (!project.name.contains('play')) {
+	    apply from: "config/common.build.gradle"
+	}
 }
 

@@ -7,12 +7,14 @@ for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder]
 
 ### Installation:
 
+Requires Java 8 JDK. Use 0.9.1 version for Java 7 JDK.
+
 Gradle:
 
 In your gradle project, add following to your dependencies:
 
 ```
-compile 'com.aerospike:aerospike-cache:O.9'
+compile 'com.aerospike:aerospike-cache:1.1'
 ```
 Maven : 
 
@@ -22,18 +24,14 @@ In your maven project, add the following dependency:
 <dependency>
 	<groupId>com.aerospike</groupId>
 	<artifactId>aerospike-cache</artifactId>
-	<version>0.9</version>
+	<version>1.1</version>
 </dependency>
 
 ```
 
-SBT Project :
+Play framework :
 
-In your Play project, add the following dependency
-
-```
-libraryDependencies += "com.aerospike" % "aerospike-cache" % "0.9"
-```
+Consider using the (cache plugin)[play-plugins/cache-plugin] for play projects.
 
 ## Configurations
 
@@ -43,7 +41,7 @@ Configuration is read from ```aerospike-cache.cfg``` in classpath. It must be in
 ```
 {
   "hosts"	:[{"name":"127.0.0.1","port":3000}],
-  "username" : "Aerospike",
+  "username" : "aerospike",
   "password" : "password",
   "namespace": "test",
   "set":"users",
@@ -108,4 +106,18 @@ cache.getOrElse(key, Callable<T> block,20)
 
 ```
 cache.remove("key")
+```
+
+### Important gradle tasks
+
+Publishing the artifact to local maven repository.
+
+```
+gradle release publishToMavenLocal
+```
+
+Build and run tests
+
+```
+gradle build
 ```

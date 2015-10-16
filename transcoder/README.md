@@ -14,12 +14,14 @@ of bytes.
 
 ### Installation:
 
+Requires Java 8 JDK. Use 0.9.1 version for Java 7 JDK.
+
 Gradle:
 
 In your gradle project, add following to your dependencies:
 
 ```
-compile 'com.aerospike:aerospike-transcoder:O.9'
+compile 'com.aerospike:aerospike-transcoder:1.1'
 ```
 Maven : 
 
@@ -29,7 +31,7 @@ In your maven project, add the following dependency:
 	<dependency>
 		<groupId>com.aerospike</groupId>
 		<artifactId>aerospike-transcoder</artifactId>
-		<version>0.9</version>
+		<version>1.1</version>
 	</dependency>
 
 ```
@@ -39,7 +41,7 @@ SBT Project :
 In your Play project, add the following dependency
 
 ```
-libraryDependencies += "com.aerospike" % "aerospike-transcoder" % "0.9"
+libraryDependencies += "com.aerospike" % "aerospike-transcoder" % "1.1"
 ```
 
 ### Usage:
@@ -89,3 +91,17 @@ public object getValue(byte[] enValue){
 ```
 
 [FasterXML-jackson dataind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)  and [Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) are the two implementations provided by default.
+
+### Important gradle tasks
+
+Publishing the artifact to local maven repository.
+
+```
+gradle release publishToMavenLocal
+```
+
+Build and run tests
+
+```
+gradle build
+```

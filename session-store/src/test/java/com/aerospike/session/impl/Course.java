@@ -32,10 +32,10 @@ import lombok.ToString;
 public class Course implements Serializable {
     private static final long serialVersionUID = 4L;
     public int credits;
-    public String Instructor;
+    public String instructor;
 
     public Course(int credits, String Instructor) {
         this.credits = credits;
-        this.Instructor = Instructor;
+        this.instructor = Instructor;
     }
 }

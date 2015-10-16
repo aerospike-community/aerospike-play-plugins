@@ -10,13 +10,25 @@ The session store API supports atomic check and set operation on session data vi
 
 ## How to Install
 
-### Play 2.4.x:
+### Play version < 2.4.3
 
 Add the following dependency in your application's build.sbt 
 
 ```
 libraryDependencies ++= Seq(
   "com.aerospike" % "aerospike-play-session-store_2.11" % "1.0"
+)
+```
+
+### Play >= 2.4.3
+
+Requires Java 8 JDK.
+
+Add the following dependency in your application's build.sbt 
+
+```
+libraryDependencies ++= Seq(
+  "com.aerospike" % "aerospike-play-session-store_2.11" % "1.1"
 )
 ```
 

@@ -1,5 +1,7 @@
 import java.lang.reflect.Method;
 
+import com.aerospike.session.SessionStore;
+
 import play.Application;
 import play.GlobalSettings;
 import play.libs.F.Promise;
@@ -7,8 +9,6 @@ import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
-
-import com.aerospike.session.SessionStore;
 
 public class Global extends GlobalSettings {
     private SessionStore store;

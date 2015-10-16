@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  "com.aerospike" % "aerospike-play-cache_2.11" % "1.0",
+  "com.aerospike" % "aerospike-play-cache_2.11" % "1.1",
   "org.projectlombok" % "lombok" % "1.16.4"
 )
 routesGenerator := InjectedRoutesGenerator

@@ -10,8 +10,8 @@ apply plugin: 'signing'
 group = 'com.aerospike'
 
 // java configuration
-targetCompatibility = 1.7
-sourceCompatibility = 1.7
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
 
 // Repository configuration
 repositories {
@@ -95,7 +95,7 @@ eclipse.project { natures 'org.springsource.ide.eclipse.gradle.core.nature' }
 
 
 // Identify jars with our company
-jar { manifest.attributes provider: 'Strand Life Sciences Pvt. Ltd.' }
+jar { manifest.attributes provider: 'Aerospike Inc.' }
 
 // Dummy release task to differentiate between release and snapshot distributions
 task release() << {
@@ -137,6 +137,60 @@ install {
         pom.groupId = 'com.aerospike'
     }
 }
+
+// publish to local maven repository
+task publishToMavenLocal (type:Upload, dependsOn:['javadoc']) {
+
+  configuration = configurations.archives
+
+  repositories {
+    mavenDeployer {
+      pom.groupId = "com.aerospike"
+      
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+      
+	   
+      pom.project {
+        name project.ext['projectName']
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description project.ext['projectDescription']
+        url project.ext['projectWebHome']
+
+        scm {
+          connection 'scm:git:' + project.ext['projectGitHome'] + '.git'
+          developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
+          url project.ext['projectGitHome']
+        }
+        
+        developers {
+          developer {
+            id 'Aerospike'
+            name 'Aerospike, Inc.'
+            email 'ashish@aerospike.com'
+          }
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+       
+      }
+    }
+  }
+} 
+
 
 uploadArchives {
   repositories {

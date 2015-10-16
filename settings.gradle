@@ -1,7 +1,14 @@
-include 'transcoder' , 'session-store', 'cache'
+include 'transcoder' , 'session-store', 'cache', ':aerospike-play-session-store_2.11', 'aerospike-play-cache_2.11'
 
 rootProject.name = 'aerospike-java-plugins'
 
 // append aeroshift to each root project name to each child
-rootProject.children.each { it.name = "aerospike" + "-" + it.name }
+rootProject.children.each {
+    if(!it.name.startsWith("aerospike")) {
+        it.name = "aerospike" + "-" + it.name
+	}
+}
 
+
+project(':aerospike-play-session-store_2.11').projectDir = new File('play-plugins/session-store-plugin')
+project(':aerospike-play-cache_2.11').projectDir = new File('play-plugins/cache-plugin')

@@ -1,0 +1,264 @@
+// plugins used across the board
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'signing'
+apply plugin: 'play'
+
+group = 'com.aerospike'
+
+project.ext.set('projectName', project.name.split(/[^\w]/).collect { it.toLowerCase().capitalize() }.join(" "))
+
+project.ext.set('projectDescription', '')
+project.ext.set('projectGitHome', 'https://github.com/aerospike/aerospike-java-plugins/play-plugins')
+project.ext.set('projectWebHome',  project.ext['projectGitHome'] + '/'  + project.projectDir.name)
+
+// Repository configuration
+repositories {
+	jcenter()
+	maven {
+		name "typesafe-maven-release"
+		url "https://repo.typesafe.com/typesafe/maven-releases"
+	}
+	ivy {
+		name "typesafe-ivy-release"
+		url "https://repo.typesafe.com/typesafe/ivy-releases"
+		layout "ivy"
+	}
+    mavenCentral()
+    maven {url "https://oss.sonatype.org/content/repositories/snapshots/"}
+	mavenLocal()
+}
+
+
+model {
+	components {
+		play {
+			platform play: '2.4.0', scala: '2.11'
+			sources {
+                java {
+                    source.srcDir "src"
+            	}
+
+				scala {
+					  source.srcDir "src"
+				}
+			}
+			
+			binaries.all {
+                tasks.withType(PlatformScalaCompile) {
+                    scalaCompileOptions.additionalParameters = ["-feature", "-language:implicitConversions"]
+                }
+            }
+		}
+	}
+}
+
+// check for updates every build
+configurations.all { resolutionStrategy.cacheChangingModulesFor 0, 'seconds' }
+
+// Core dependencies
+dependencies {
+    // Compile dependencies
+    play "com.google.inject:guice:4.0"
+    play "com.google.inject.extensions:guice-assistedinject:4.0"
+    play "org.apache.commons:commons-lang3:3.0.1"
+
+    // logging
+    play "org.slf4j:slf4j-api:1.7.5"
+
+    // Lombok magic
+    play group: "org.projectlombok", name: "lombok", version: "1.16.6"
+
+    // logging
+     "ch.qos.logback:logback-core:1.0.13"
+    playTest "ch.qos.logback:logback-classic:1.0.13"
+
+    // runtime logging
+    playRun "ch.qos.logback:logback-core:1.0.13"
+    playRun "ch.qos.logback:logback-classic:1.0.13"
+}
+
+// add compile only dependencies like project lombok to eclipse classpath
+eclipse.classpath {
+    plusConfigurations += [configurations.play, configurations.playTest, configurations.playRun]
+}
+
+// Dummy release task to differentiate between release and snapshot distributions
+task release() << {
+}
+
+task sourcesJar(type: Jar, dependsOn: 'playBinary') {
+    classifier = 'sources'
+    from 'src'
+}
+
+// Fake javadoc jar to ensure oss accepts the release.
+// TODO: Figure out how to build javadoc without the java plugin
+task javaDocJar(type: Jar, dependsOn: 'playBinary') {
+    classifier = 'javadoc'
+    from 'src'
+}
+
+// create java project structure
+task "createJavaDirs" << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+// enable html output for find bugs
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+// publish to OSSRH
+artifacts { archives sourcesJar, javaDocJar, file: file('build/playBinary/lib/' + project.name + '.jar')}
+
+// publish to local maven repository
+
+
+task publishToMavenLocal (type:Upload) {
+
+  configuration = configurations.play
+
+  dependsOn = ['playBinary', 'sourcesJar', 'javaDocJar']
+
+  repositories {
+    mavenDeployer {
+      pom.groupId = "com.aerospike"
+      
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+      
+	   
+      pom.project {
+        name project.ext['projectName']
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description project.ext['projectDescription']
+        url project.ext['projectWebHome']
+
+        scm {
+          connection 'scm:git:' + project.ext['projectGitHome'] + '.git'
+          developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
+          url project.ext['projectGitHome']
+        }
+        
+        developers {
+          developer {
+            id 'Aerospike'
+            name 'Aerospike, Inc.'
+            email 'ashish@aerospike.com'
+          }
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+       
+      }
+
+	  pom.withXml { XmlProvider xmlProvider ->
+		  def dependenciesNode = asNode().appendNode('dependencies')
+
+		  //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+		  configurations.play.allDependencies.each {
+			  def dependencyNode = dependenciesNode.appendNode('dependency')
+			  dependencyNode.appendNode('groupId', it.group)
+			  dependencyNode.appendNode('artifactId', it.name)
+			  dependencyNode.appendNode('version', it.version)
+		  }
+	  }
+    }
+  }
+} 
+
+
+
+
+signing {
+    sign configurations.archives
+}
+
+afterEvaluate {
+
+	uploadArchives {
+	  repositories {
+		mavenDeployer {
+		  pom.groupId = "com.aerospike"
+
+		  beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+		  repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			authentication(userName: ossrhUsername, password: ossrhPassword)
+		  }
+
+		  snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+			authentication(userName: ossrhUsername, password: ossrhPassword)
+		  }
+
+
+		  pom.project {
+			name project.ext['projectName']
+			packaging 'jar'
+			// optionally artifactId can be defined here 
+			description project.ext['projectDescription']
+			url project.ext['projectWebHome']
+
+			scm {
+			  connection 'scm:git:' + project.ext['projectGitHome'] + '.git'
+			  developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
+			  url project.ext['projectGitHome']
+			}
+
+			developers {
+			  developer {
+				id 'Aerospike'
+				name 'Aerospike, Inc.'
+				email 'ashish@aerospike.com'
+			  }
+			}
+
+			licenses {
+			  license {
+				name 'The Apache License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			  }
+			}
+
+		  }
+
+  pom.withXml { XmlProvider xmlProvider ->
+		  def dependenciesNode = asNode().appendNode('dependencies')
+		  println 'Here!!!'
+
+		  //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+		  configurations.play.allDependencies.each {
+		      println it
+			  def dependencyNode = dependenciesNode.appendNode('dependency')
+			  dependencyNode.appendNode('groupId', it.group)
+			  dependencyNode.appendNode('artifactId', it.name)
+			  dependencyNode.appendNode('version', it.version)
+		  }
+	  }
+
+
+		}
+	  }
+	}
+}

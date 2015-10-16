@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Cleanup;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +31,8 @@ import com.aerospike.session.SessionNotFound;
 import com.aerospike.session.SessionStoreException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import lombok.Cleanup;
 
 /**
  * @author akshay
@@ -119,12 +119,12 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(
-                new DefaultSessionIDProvider(), config, clientProvider.get(),
-                null);
-        store.put("alias", "spidey");
         SessionIDProvider sessionIDProvider = injector
                 .getInstance(SessionIDProvider.class);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                sessionIDProvider, config, clientProvider.get(), null);
+        store.put("alias", "spidey");
+
         @Cleanup
         AerospikeClient client = new AerospikeClient("127.0.0.1", 3000);
         Key key = new Key("test", "users", sessionIDProvider.get());
@@ -150,11 +150,11 @@ public class AerospikeSessiontimeoutTest {
                 .getConfiguration("aeroshift_smallTTL.cfg");
         AerospikeClientProvider clientProvider = new AerospikeClientProvider(
                 config);
-        AerospikeSessionStore store = new AerospikeSessionStore(
-                new DefaultSessionIDProvider(), config, clientProvider.get(),
-                null);
         SessionIDProvider sessionIDProvider = injector
                 .getInstance(SessionIDProvider.class);
+        AerospikeSessionStore store = new AerospikeSessionStore(
+                sessionIDProvider, config, clientProvider.get(), null);
+
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("home", "gotham");
         map.put("mentor", "Ra's AlGhul");

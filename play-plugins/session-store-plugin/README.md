@@ -1,6 +1,6 @@
 # Aerospike Session Store Plugin for Play Framework 2.4.x
 
-This plugin implements a session-store for Play Framework. This enables users to store their session 
+This plugin implements a session-store for Play Framework using  [Aerospike](http://aerospike.com) database. This enables users to store their session 
 data into Aerospike. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOS. 
 The plugin provides option for using either one of two Transcoders, [Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
 and [FasterXML-jackson databind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features)

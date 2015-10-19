@@ -1,6 +1,6 @@
 # Aerospike Cache Plugin for Play Framework 2.4.x
 
-This plugin implements play's internal Caching interface using Aerospike. Provides Aerospike-based Cache API
+This plugin implements play's internal Caching interface using [Aerospike](http://aerospike.com) database. Provides Aerospike-based Cache API
 for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 
 The plugin provides option to use one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
 and [FasterXML-jackson databind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) or write your own serializer

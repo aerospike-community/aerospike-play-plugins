@@ -1,15 +1,15 @@
 # Aerospike Transcoder Interface for serializing and deserializing POJOS
 
 Java has a mechanism such that an object can be represented as a sequence of bytes. This sequence will
-contain information about the object's type and all the types of data stored inside the object as well 
-as the data itself. Serializing an object is a process of converting that object into a sequence of 
-bytes. Deserialization is a process creating object back from the sequence of bytes. Aerospike Transcoder 
-interface allows you to serialize and deserialize Java Objects. You can also implement your own 
-serializer-deserailizer using this interface. 
+contain information about the object's type and all the types of data stored inside the object as well
+as the data itself. Serializing an object is a process of converting that object into a sequence of
+bytes. Deserialization is a process creating object back from the sequence of bytes. Aerospike Transcoder
+interface allows you to serialize and deserialize Java Objects. You can also implement your own
+serializer-deserailizer using this interface.
 
 This transcoder interface has two operations:
 * encode(): This operation will take an object and return a byte array representation.
-* decode(): This operation will take byte array and create an object from the sequence 
+* decode(): This operation will take byte array and create an object from the sequence
 of bytes.
 
 ### Installation:
@@ -21,9 +21,9 @@ Gradle:
 In your gradle project, add following to your dependencies:
 
 ```
-compile 'com.aerospike:aerospike-transcoder:1.1'
+compile 'com.aerospike:aerospike-transcoder:1.2'
 ```
-Maven : 
+Maven :
 
 In your maven project, add the following dependency:
 
@@ -31,7 +31,7 @@ In your maven project, add the following dependency:
 	<dependency>
 		<groupId>com.aerospike</groupId>
 		<artifactId>aerospike-transcoder</artifactId>
-		<version>1.1</version>
+		<version>1.2</version>
 	</dependency>
 
 ```
@@ -41,7 +41,7 @@ SBT Project :
 In your Play project, add the following dependency
 
 ```
-libraryDependencies += "com.aerospike" % "aerospike-transcoder" % "1.1"
+libraryDependencies += "com.aerospike" % "aerospike-transcoder" % "1.2"
 ```
 
 ### Usage:
@@ -58,7 +58,7 @@ public class ShoppingItem implements Serializable{
 	String id;
 	String productname;
 	int Quantity;
-	
+
 	public ShoppingItem() {
         this.id = null;
         this.productname = null;

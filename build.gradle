@@ -5,19 +5,19 @@ subprojects {
     // make sure sonar plugin is not applied to subprojects.
     // the plugin works for subprojects when applied to the root project
     project.ext.set("skipSonarPlugin", true)
-    
-    
+
+
     // set defaults using the gradle project name.
     project.ext.set('projectName', project.name.split(/[^\w]/).collect { it.toLowerCase().capitalize() }.join(" "))
     project.ext.set('projectDescription', project.ext['projectName'])
-    project.ext.set('projectGitHome', 'https://github.com/aerospike/aerospike-java-plugins')
+    project.ext.set('projectGitHome', 'https://github.com/aerospike/aerospike-play-plugins')
     project.ext.set('projectWebHome',  project.ext['projectGitHome'] + '/'  + project.projectDir.name)
-    
+
     gradle.taskGraph.whenReady {taskGraph ->
         if (taskGraph.hasTask(release)) {
-            version = '1.1'
+            version = '1.2'
         } else {
-            version = '1.1-SNAPSHOT'
+            version = '1.2-SNAPSHOT'
         }
     }
 
@@ -25,4 +25,3 @@ subprojects {
 	    apply from: "config/common.build.gradle"
 	}
 }
-

@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  "com.aerospike" % "aerospike-play-session-store_2.11" % "1.1",
+  "com.aerospike" % "aerospike-play-session-store_2.11" % "1.2",
   "org.projectlombok" % "lombok" % "1.16.4"
 )
 

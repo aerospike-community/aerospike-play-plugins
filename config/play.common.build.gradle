@@ -12,7 +12,7 @@ group = 'com.aerospike'
 project.ext.set('projectName', project.name.split(/[^\w]/).collect { it.toLowerCase().capitalize() }.join(" "))
 
 project.ext.set('projectDescription', '')
-project.ext.set('projectGitHome', 'https://github.com/aerospike/aerospike-java-plugins/play-plugins')
+project.ext.set('projectGitHome', 'https://github.com/aerospike/aerospike-play-plugins/tree/master/play-plugins')
 project.ext.set('projectWebHome',  project.ext['projectGitHome'] + '/'  + project.projectDir.name)
 
 // Repository configuration
@@ -46,7 +46,7 @@ model {
 					  source.srcDir "src"
 				}
 			}
-			
+
 			binaries.all {
                 tasks.withType(PlatformScalaCompile) {
                     scalaCompileOptions.additionalParameters = ["-feature", "-language:implicitConversions"]
@@ -131,7 +131,7 @@ task publishToMavenLocal (type:Upload) {
   repositories {
     mavenDeployer {
       pom.groupId = "com.aerospike"
-      
+
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
       repository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
@@ -141,12 +141,12 @@ task publishToMavenLocal (type:Upload) {
       snapshotRepository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
         authentication(userName: ossrhUsername, password: ossrhPassword)
       }
-      
-	   
+
+
       pom.project {
         name project.ext['projectName']
         packaging 'jar'
-        // optionally artifactId can be defined here 
+        // optionally artifactId can be defined here
         description project.ext['projectDescription']
         url project.ext['projectWebHome']
 
@@ -155,12 +155,12 @@ task publishToMavenLocal (type:Upload) {
           developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
           url project.ext['projectGitHome']
         }
-        
+
         developers {
           developer {
             id 'Aerospike'
             name 'Aerospike, Inc.'
-            email 'ashish@aerospike.com'
+            email 'plugins@aerospike.com'
           }
         }
 
@@ -170,7 +170,7 @@ task publishToMavenLocal (type:Upload) {
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
           }
         }
-       
+
       }
 
 	  pom.withXml { XmlProvider xmlProvider ->
@@ -186,7 +186,7 @@ task publishToMavenLocal (type:Upload) {
 	  }
     }
   }
-} 
+}
 
 
 
@@ -216,7 +216,7 @@ afterEvaluate {
 		  pom.project {
 			name project.ext['projectName']
 			packaging 'jar'
-			// optionally artifactId can be defined here 
+			// optionally artifactId can be defined here
 			description project.ext['projectDescription']
 			url project.ext['projectWebHome']
 
@@ -230,7 +230,7 @@ afterEvaluate {
 			  developer {
 				id 'Aerospike'
 				name 'Aerospike, Inc.'
-				email 'ashish@aerospike.com'
+				email 'plugins@aerospike.com'
 			  }
 			}
 

@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "com.aerospike" % "aerospike-play-cache_2.11" % "1.1",
+  "com.aerospike" % "aerospike-play-cache_2.11" % "1.2",
   "org.projectlombok" % "lombok" % "1.16.4"
 )
 

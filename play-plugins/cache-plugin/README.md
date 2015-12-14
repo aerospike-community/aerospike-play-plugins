@@ -1,38 +1,38 @@
 # Aerospike Cache Plugin for Play Framework 2.4.x
 
 This plugin implements play's internal Caching interface using [Aerospike](http://aerospike.com) database. Provides Aerospike-based Cache API
-for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs. 
-The plugin provides option to use one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization) 
+for Play Framework. Supported types include String, Int, Long, Boolean, BLOBs, List, Map and POJOs.
+The plugin provides option to use one of two Transcoders,[Fast Serialization](https://github.com/RuedigerMoeller/fast-serialization)
 and [FasterXML-jackson databind](https://github.com/FasterXML/jackson-databind/wiki/Serialization-Features) or write your own serializer
 for handling POJOs and complex datatypes. Please refer to [Aerospike-Transcoder](https://github.com/aerospike/aerospike-java-plugins/tree/master/transcoder) for more about serializers.
 
 ## How to install
 
-### Play < 2.4.3: 
+### Play < 2.4.3:
 
-Add the following dependency in your application's build.sbt 
+Add the following dependency in your application's build.sbt
 
 ```
 libraryDependencies ++= Seq (
   "com.aerospike" % "aerospike-play-cache_2.11" % "1.0"
 )
-```  
+```
 
 ### Play >= 2.4.3
 
 Requires Java 8 JDK.
 
-Add the following dependency in your application's build.sbt 
+Add the following dependency in your application's build.sbt
 
 ```
 libraryDependencies ++= Seq (
-  "com.aerospike" % "aerospike-play-cache_2.11" % "1.1"
-) 
+  "com.aerospike" % "aerospike-play-cache_2.11" % "1.2"
+)
 
 ```
 ## Configurations
 
-The default cache module (EhCache) will be used for 
+The default cache module (EhCache) will be used for
 non-named cache. So first we need to disable it and enable only AerospikeCacheModule to use both named and non-named
 cache. You can disable the Play's default implementation by adding following to conf/application.conf in your application
 
@@ -45,7 +45,7 @@ For binding the defaultCache, add following in your application's conf/applicati
 ```
 play.modules.cache.defaultCache=default
 ```
-Play 2.4 introduced namedcache for the first time. This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following 
+Play 2.4 introduced namedcache for the first time. This module also supports Play 2.4 NamedCaches. To add additional namespaces besides default cache, add following
 to conf/application.conf
 
 ```
@@ -55,11 +55,11 @@ play.modules.cache.bindCaches=["db-cache", "user-cache", "session-cache"]
 
 
 Following is the description for configuration settings.
-	
+
 * ```play.cache.aerospike.hosts```: Specify list of aerospike endpoints/nodes for the cluster(host machines) to be used, with their
 	 name and ports, using configuration settings. [This field is necessary]
-* ```play.cache.aerospike.username```: Specify aerospike username. [This field is necessary]
-* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is necessary]
+* ```play.cache.aerospike.username```: Specify aerospike username. [This field is optional]
+* ```play.cache.aerospike.password```: Specify your aerospike password. [This field is optional]
 * ```play.cache.aerospike.namespace```: Specify aerospike namespace to be used.[This field is necessary]
 * ```play.cache.aerospike.set```: Specify aerospike set name to be used for storing cache data.  [This field is necessary]
 * ```play.cache.aerospike.transcoderFQCN``` : Specify the transcoder to be used for serializing and deserializing POJOs. Default implementation uses Fast Transcoder[Optional parameter]
@@ -82,8 +82,6 @@ play.cache.aerospike{
 					port = 3000
 				}
 			]
-	username = "Aerospike"
-	password = "password"
 	namespace = "cache"
 	set = "cache"
 	bin = "mybin"
@@ -167,7 +165,7 @@ value will expire after 100 seconds.
 ```
 Cache.set(key,value,100)
 ```
-	
+
 #### To retrieve the value from the cache
 
 Get the value from the key

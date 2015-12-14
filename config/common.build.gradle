@@ -146,7 +146,7 @@ task publishToMavenLocal (type:Upload, dependsOn:['javadoc']) {
   repositories {
     mavenDeployer {
       pom.groupId = "com.aerospike"
-      
+
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
       repository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
@@ -156,12 +156,12 @@ task publishToMavenLocal (type:Upload, dependsOn:['javadoc']) {
       snapshotRepository(url: "file:///home/" + System.getProperty("user.name")  + "/.m2/repository") {
         authentication(userName: ossrhUsername, password: ossrhPassword)
       }
-      
-	   
+
+
       pom.project {
         name project.ext['projectName']
         packaging 'jar'
-        // optionally artifactId can be defined here 
+        // optionally artifactId can be defined here
         description project.ext['projectDescription']
         url project.ext['projectWebHome']
 
@@ -170,12 +170,12 @@ task publishToMavenLocal (type:Upload, dependsOn:['javadoc']) {
           developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
           url project.ext['projectGitHome']
         }
-        
+
         developers {
           developer {
             id 'Aerospike'
             name 'Aerospike, Inc.'
-            email 'ashish@aerospike.com'
+            email 'plugins@aerospike.com'
           }
         }
 
@@ -185,18 +185,18 @@ task publishToMavenLocal (type:Upload, dependsOn:['javadoc']) {
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
           }
         }
-       
+
       }
     }
   }
-} 
+}
 
 
 uploadArchives {
   repositories {
     mavenDeployer {
       pom.groupId = "com.aerospike"
-      
+
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
       repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
@@ -206,12 +206,12 @@ uploadArchives {
       snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
         authentication(userName: ossrhUsername, password: ossrhPassword)
       }
-      
-	   
+
+
       pom.project {
         name project.ext['projectName']
         packaging 'jar'
-        // optionally artifactId can be defined here 
+        // optionally artifactId can be defined here
         description project.ext['projectDescription']
         url project.ext['projectWebHome']
 
@@ -220,12 +220,12 @@ uploadArchives {
           developerConnection 'scm:git:' + project.ext['projectGitHome']  + '.git'
           url project.ext['projectGitHome']
         }
-        
+
         developers {
           developer {
             id 'Aerospike'
             name 'Aerospike, Inc.'
-            email 'ashish@aerospike.com'
+            email 'plugins@aerospike.com'
           }
         }
 
@@ -235,7 +235,7 @@ uploadArchives {
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
           }
         }
-       
+
       }
     }
   }

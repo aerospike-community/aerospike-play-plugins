@@ -2,6 +2,7 @@ bin/
 target/
 .classpath
 .project
+org.eclipse.jdt.core.prefs
 logs/
 repository/
 dist/

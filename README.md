@@ -1,6 +1,7 @@
 # Aerospike Play Plugins (Java and Scala)
 
-Java / scala based plugins for common aerospike use cases.
+Play plugins to use aerospike under the hood.
+
  - cache - use aerospike as your high performance cache. Load and store native java objects directly from your application.
  - session store - use aerospike as a high performance session storage that handles native ojects and session expiry.
 

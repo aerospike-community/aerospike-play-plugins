@@ -72,8 +72,6 @@ play.sessionstore.aerospike{
 					port = 3000
 				}
 			]
-	username = "Aerospike"
-	password = "password"
 	namespace = "test"
 }
 ```
